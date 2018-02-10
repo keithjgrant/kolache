@@ -1,4 +1,3 @@
-
 /* package definition */
 @cpm-package {
   .$(name) {
@@ -9,7 +8,7 @@
 }
 
 /* package usage */
-@cpm-import cpm-button as .button {
+@cpm-import 'cpm-button' as .button {
   $padding: 0.5em 1em;
   $border-radius: 0.5em;
 }

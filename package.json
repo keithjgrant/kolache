@@ -2,17 +2,12 @@
   "name": "postcss-cpm",
   "version": "0.0.0",
   "description": "PostCSS plugin for importing and distributing CSS packages",
-  "keywords": [
-    "postcss",
-    "css",
-    "postcss-plugin",
-    "package-management"
-  ],
+  "keywords": ["postcss", "css", "postcss-plugin", "package-management"],
   "author": "Keith J. Grant <me@keithjgrant.com>",
   "license": "MIT",
   "repository": "keithjgrant/postcss-cpm",
   "scripts": {
-    "test": "npm run build && jest && eslint *.js",
+    "test": "jest && eslint *.js",
     "test:watch": "jest --watch",
     "build": "rollup index.js --output.format cjs --output.file dist/index.js"
   },
@@ -26,18 +21,12 @@
     "precss": "^3.1.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.2.2",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.15.0",
     "eslint-config-postcss": "^2.0.2",
     "jest": "^21.0.0",
     "rollup": "^0.55.5"
-  },
-  "_eslintConfig": {
-    "extends": "eslint-config-postcss",
-    "env": {
-      "jest": true
-    },
-    "parserOptions": {
-      "indent": 2
-    }
   }
 }

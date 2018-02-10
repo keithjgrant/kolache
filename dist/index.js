@@ -6,43 +6,30 @@ var postcss = _interopDefault(require('postcss'));
 var postcssImport = _interopDefault(require('postcss-import'));
 var precss = _interopDefault(require('precss'));
 
-var cpm = postcss.plugin('postcss-cpm', opts => {
-
-  const packages = [];
-
+var cpmPackage = postcss.plugin('postcss-cpm', opts => {
   return function (root, result) {
     root.walkAtRules('cpm-package', rule => {
-      packages.push(rule);
+      console.log('cpm-package', rule);
     });
 
-    root.walkAtRules('cpm-import', rule => {
-
-    });
+    root.walkAtRules('cpm-import', rule => {});
   };
-
 });
 
-const plugins = [
-  postcssImport,
-  cpm,
-  precss,
-];
+const plugins = [cpmPackage, postcssImport, cpmPackage, precss];
 
 var index = postcss.plugin('postcss-cpm', opts => {
   opts = opts || {};
 
   // initialize all plugins
-  const initializedPlugins = plugins.map(
-    plugin => plugin(opts)
-  );
+  const initializedPlugins = plugins.map(plugin => plugin(opts));
 
   // process css with all plugins
-  return (root, result) => initializedPlugins.reduce(
-    (promise, plugin) => promise.then(
-      () => plugin(result.root, result)
-    ),
-    Promise.resolve()
-  );
+  return (root, result) =>
+    initializedPlugins.reduce(
+      (promise, plugin) => promise.then(() => plugin(result.root, result)),
+      Promise.resolve()
+    );
 });
 
 module.exports = index;
