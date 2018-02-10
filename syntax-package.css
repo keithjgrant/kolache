@@ -1,0 +1,8 @@
+
+@cpm-package {
+  .$(name) {
+    display: inline-block;
+    padding: $padding;
+    border-radius: $border-radius;
+  }
+}

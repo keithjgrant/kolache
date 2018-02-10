@@ -1,0 +1,5 @@
+
+@cpm(cpm-button as button) {
+  $padding: 0.5em 1em;
+  $border-radius: 0.5em;
+}
