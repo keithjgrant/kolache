@@ -11,25 +11,33 @@
   "author": "Keith J. Grant <me@keithjgrant.com>",
   "license": "MIT",
   "repository": "keithjgrant/postcss-cpm",
+  "scripts": {
+    "test": "npm run build && jest && eslint *.js",
+    "test:watch": "jest --watch",
+    "build": "rollup index.js --output.format cjs --output.file dist/index.js"
+  },
   "bugs": {
     "url": "https://github.com/keithjgrant/postcss-cpm/issues"
   },
   "homepage": "https://github.com/keithjgrant/postcss-cpm",
   "dependencies": {
-    "postcss": "^6.0.16"
+    "postcss": "^6.0.16",
+    "postcss-import": "^11.0.0",
+    "precss": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^4.15.0",
     "eslint-config-postcss": "^2.0.2",
-    "jest": "^21.0.0"
+    "jest": "^21.0.0",
+    "rollup": "^0.55.5"
   },
-  "scripts": {
-    "test": "jest && eslint *.js"
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-postcss/es5",
+  "_eslintConfig": {
+    "extends": "eslint-config-postcss",
     "env": {
       "jest": true
+    },
+    "parserOptions": {
+      "indent": 2
     }
   }
 }

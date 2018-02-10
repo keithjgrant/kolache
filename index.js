@@ -1,13 +1,27 @@
-var postcss = require('postcss');
+import postcss from 'postcss';
+import postcssImport from 'postcss-import';
+import precss from 'precss';
+import cpm from './src/cpm';
 
-module.exports = postcss.plugin('postcss-cpm', function (opts) {
-    opts = opts || {};
+const plugins = [
+  postcssImport,
+  cpm,
+  precss,
+];
 
-    // Work with options here
+export default postcss.plugin('postcss-cpm', opts => {
+  opts = opts || {};
 
-    return function (root, result) {
+  // initialize all plugins
+  const initializedPlugins = plugins.map(
+    plugin => plugin(opts)
+  );
 
-        // Transform CSS AST here
-
-    };
+  // process css with all plugins
+  return (root, result) => initializedPlugins.reduce(
+    (promise, plugin) => promise.then(
+      () => plugin(result.root, result)
+    ),
+    Promise.resolve()
+  );
 });

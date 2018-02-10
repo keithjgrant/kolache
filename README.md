@@ -1,4 +1,4 @@
-# PostCSS Cpm [![Build Status][ci-img]][ci]
+# PostCSS CPM [![Build Status][ci-img]][ci]
 
 [PostCSS] plugin for importing and distributing CSS packages.
 
