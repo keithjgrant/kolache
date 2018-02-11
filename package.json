@@ -1,16 +1,18 @@
 {
-  "name": "postcss-cpm",
+  "name": "kolache",
   "version": "0.0.1",
-  "description": "PostCSS plugin for importing and distributing CSS packages",
+  "description": "Import and distribute CSS packages",
   "keywords": [
     "postcss",
     "css",
     "postcss-plugin",
+    "css-framework",
+    "preprocessor",
     "package-management"
   ],
   "author": "Keith J. Grant <me@keithjgrant.com>",
   "license": "MIT",
-  "repository": "keithjgrant/postcss-cpm",
+  "repository": "keithjgrant/kolache",
   "scripts": {
     "test": "jest && eslint *.js",
     "test:watch": "jest --watch",
@@ -18,9 +20,9 @@
   },
   "main": "dist/index.js",
   "bugs": {
-    "url": "https://github.com/keithjgrant/postcss-cpm/issues"
+    "url": "https://github.com/keithjgrant/kolache/issues"
   },
-  "homepage": "https://github.com/keithjgrant/postcss-cpm",
+  "homepage": "https://github.com/keithjgrant/kolache",
   "dependencies": {
     "@csstools/sass-import-resolve": "^1.0.0",
     "postcss": "^6.0.16",
