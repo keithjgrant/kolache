@@ -25,7 +25,7 @@ export default postcss.plugin('kolache', opts => {
   const plugins = [
     cpmImport(opts),
     // logAST,
-    precss(opts),
+    // precss(opts),
     // postcssExtendRule,
     // postcssAdvancedVariables,
     // postcssPresetEnv,
