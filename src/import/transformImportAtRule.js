@@ -54,7 +54,6 @@ export default function transformImportAtRule(rule, opts) {
           // });
         }),
       e => {
-        console.log(e, e.message);
         // otherwise, if the @import could not be found
         manageUnresolved(
           rule,
@@ -78,7 +77,7 @@ function getImportOpts(node, opts) {
     opts.result.from;
   const cwd = cwf ? path.dirname(cwf) : opts.importRoot;
 
-  return { id, alias, cwf, cwd: cwd || process.cwd() };
+  return { id, alias, cwf, cwd };
 }
 
 // return a string with the wrapping url() and quotes trimmed

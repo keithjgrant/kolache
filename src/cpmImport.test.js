@@ -1,10 +1,14 @@
 import postcss from 'postcss';
+import path from 'path';
 import cpmImport from './cpmImport';
 
 function run(input, output, opts) {
   if (typeof opts === 'undefined') {
-    opts = {};
+    opts = {
+      importPaths: [path.resolve(__dirname, '../tests/fixtures')],
+    };
   }
+  console.log(__dirname);
   return postcss([cpmImport(opts)])
     .process(input)
     .then(result => {
@@ -16,12 +20,14 @@ function run(input, output, opts) {
 it('should insert basic package', () => {
   return run(
     `
-@cpm-import "custom-button" as .button;
+@cpm-import "static-button" as .button;
   `,
     `
 {
-    $cpm-name: .button;
-    @import "custom-button";
+$cpm-name: .button;$(cpm-name) {
+  display: inline-block;
+  padding: 0.3em;
+}
 }
   `
   );
@@ -30,17 +36,19 @@ it('should insert basic package', () => {
 it('should insert package with custom vars', () => {
   return run(
     `
-@cpm-import "custom-button" as .button {
+@cpm-import "static-button" as .button {
   $border-radius: 1em;
   $color: inherit;
 }
   `,
     `
 {
-  $cpm-name: .button;
   $border-radius: 1em;
   $color: inherit;
-  @import "custom-button";
+  $cpm-name: .button;$(cpm-name) {
+  display: inline-block;
+  padding: 0.3em;
+}
 }
   `
   );

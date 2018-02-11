@@ -7,7 +7,6 @@ import util from 'util';
 
 function resolveImport(opts) {
   return (id, cwd) => {
-    console.log('CWD', cwd);
     return resolve(id, { cwd, readFile: true, cache: opts.importCache });
   };
 }
