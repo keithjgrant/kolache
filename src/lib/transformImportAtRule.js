@@ -21,55 +21,52 @@ export default function transformImportAtRule(rule, opts) {
     Promise.reject()
   );
 
-  opts.importPromise.push(
-    importPromise.then(
-      // promise the processed file
-      ({ file, contents }) =>
-        processor.process(contents, { from: file }).then(({ root }) => {
-          // push a dependency message
-          opts.result.messages.push({
-            type: 'dependency',
-            file,
-            parent: cwf,
-          });
+  return importPromise.then(
+    // promise the processed file
+    ({ file, contents }) =>
+      processor.process(contents, { from: file }).then(({ root }) => {
+        // push a dependency message
+        opts.result.messages.push({
+          type: 'dependency',
+          file,
+          parent: cwf,
+        });
 
-          // imported nodes
-          const nodes = root.nodes.slice(0);
-          const nodesArray = getNodesArray(nodes);
+        // imported nodes
+        const nodes = root.nodes.slice(0);
 
-          // replace the @import at-rule with the imported nodes
-          if (alias) {
-            // package import
-            replaceImportedPackage(rule, nodes);
-          } else {
-            // normal partial import
-            rule.replaceWith(nodes);
+        // replace the @import at-rule with the imported nodes
+        if (alias) {
+          // package import
+          replaceImportedPackage(rule, nodes);
+        } else {
+          // normal partial import
+          rule.replaceWith(nodes);
+        }
+
+        // transform all nodes from the import
+        // transformNode({ nodes }, opts);
+        const childPromises = [];
+        nodes.forEach(child => {
+          if (
+            child.type === 'atrule' &&
+            child.name.toLowerCase() === 'import'
+          ) {
+            childPromises.push(transformRule(child, opts));
           }
+        });
 
-          // transform all nodes from the import
-          // transformNode({ nodes }, opts);
-          nodesArray.forEach(child => {
-            if (
-              child.type === 'atrule' &&
-              child.name.toLowerCase() === 'import'
-            ) {
-              transformRule(child, opts);
-            }
-          });
-          // nodes.walkAtRules('import', childRule => {
-          //   transformImportAtrule(childRule, opts);
-          // });
-        }),
-      () => {
-        // otherwise, if the @import could not be found
-        manageUnresolved(
-          rule,
-          opts,
-          '@import',
-          `Could not resolve the @import for "${id}"`
-        );
-      }
-    )
+        return Promise.all(childPromises);
+      }),
+    () => {
+      // otherwise, if the @import could not be found
+      manageUnresolved(
+        rule,
+        opts,
+        '@import',
+        `Could not resolve the @import for "${id}"`
+      );
+    }
   );
 }
 
@@ -100,10 +97,6 @@ function trimWrappingURL(string) {
 // return a string with the wrapping quotes trimmed
 function trimWrappingQuotes(string) {
   return string.replace(/^("|')([\W\w]*)\1$/, '$2');
-}
-
-function getNodesArray(node) {
-  return Array.from(Object(node).nodes || []);
 }
 
 function isPackageImport(params) {

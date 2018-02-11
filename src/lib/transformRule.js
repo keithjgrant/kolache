@@ -2,14 +2,10 @@ import transformImportAtRule from './transformImportAtRule';
 
 export default function transformRule(rule, opts) {
   if (rule.type !== 'atrule') {
-    return;
+    return Promise.resolve();
   }
   if (rule.name.toLowerCase() !== 'import') {
-    return;
+    return Promise.resolve();
   }
-  transformImportAtRule(rule, opts);
-}
-
-function getNodesArray(node) {
-  return Array.from(Object(node).nodes || []);
+  return transformImportAtRule(rule, opts);
 }

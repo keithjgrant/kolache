@@ -1,8 +1,6 @@
 import postcss from 'postcss';
 import resolve from '@csstools/sass-import-resolve';
-import { parseParams } from './lib/parseRule';
 import transformRule from './lib/transformRule';
-import transformImportAtRule from './lib/transformImportAtRule';
 
 function resolveImport(opts) {
   return (id, cwd) => {
@@ -18,35 +16,12 @@ export default postcss.plugin('postcss-kolache', opts => {
     opts.importResolve = Object(opts).resolve || resolveImport(opts);
     opts.result = result;
 
+    const promises = [];
+
     root.walkAtRules('import', rule => {
-      transformRule(rule, opts);
-      // const param = parseParams(rule.params);
-      // const newRule = postcss.rule({
-      //   selector: '',
-      //   raws: { semicolon: true },
-      // });
-      // rule.parent.insertAfter(rule, newRule);
-      //
-      // rule.walk(childNode => {
-      //   newRule.append(childNode.clone());
-      // });
-      // newRule.append(
-      //   postcss.decl({
-      //     prop: '$cpm-name',
-      //     value: param.name,
-      //     source: rule.source,
-      //   })
-      // );
-      // const importRule = postcss.atRule({
-      //   name: 'import',
-      //   params: param.filename,
-      //   source: rule.source,
-      // });
-      // newRule.append(importRule);
-      // rule.remove();
-      // transformImportAtRule(importRule, opts);
+      promises.push(transformRule(rule, opts));
     });
 
-    return Promise.all(opts.importPromise);
+    return Promise.all(promises);
   };
 });

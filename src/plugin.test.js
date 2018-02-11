@@ -54,21 +54,22 @@ it('should insert package with custom vars', () => {
   );
 });
 
-it.skip('should import package nested in a partial', () => {
+it('should import package nested in a partial', () => {
   return run(
     `
 @import "partial";
     `,
     `
     .partial {
-      color: green;
-    }
+  color: green;
+}
 
-    $kolache_name: .button;$(kolache_name) {
-      display: inline-block;
-      padding: 0.3em;
-    }
-    }
+ {
+  $kolache_name: .button;$(kolache_name) {
+  display: inline-block;
+  padding: 0.3em;
+}
+}
 
     `
   );

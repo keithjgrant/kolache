@@ -2,4 +2,4 @@
   color: green;
 }
 
-@cpm-import 'static-button' as .button;
+@import 'static-button' as .button;
