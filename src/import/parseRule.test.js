@@ -6,3 +6,10 @@ it('should parse params', () => {
     name: '.button',
   });
 });
+
+it.skip('should parse params with no alias', () => {
+  expect(parseParams('"button"')).toEqual({
+    filename: '"button"',
+    name: '.button',
+  });
+});

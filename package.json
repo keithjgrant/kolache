@@ -1,8 +1,13 @@
 {
   "name": "postcss-cpm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "PostCSS plugin for importing and distributing CSS packages",
-  "keywords": ["postcss", "css", "postcss-plugin", "package-management"],
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "package-management"
+  ],
   "author": "Keith J. Grant <me@keithjgrant.com>",
   "license": "MIT",
   "repository": "keithjgrant/postcss-cpm",
@@ -11,13 +16,21 @@
     "test:watch": "jest --watch",
     "build": "rollup index.js --output.format cjs --output.file dist/index.js"
   },
+  "main": "dist/index.js",
   "bugs": {
     "url": "https://github.com/keithjgrant/postcss-cpm/issues"
   },
   "homepage": "https://github.com/keithjgrant/postcss-cpm",
   "dependencies": {
     "postcss": "^6.0.16",
+    "postcss-advanced-variables": "^2.3.1",
+    "postcss-atroot": "^0.1.3",
+    "postcss-extend-rule": "^1.1.0",
     "postcss-import": "^11.0.0",
+    "postcss-nested": "^3.0.0",
+    "postcss-partial-import": "^4.1.0",
+    "postcss-preset-env": "^2.1.0",
+    "postcss-property-lookup": "^2.0.0",
     "precss": "^3.1.0"
   },
   "devDependencies": {

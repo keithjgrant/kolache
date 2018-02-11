@@ -13,6 +13,14 @@
   "rules": {
     "semi": 2,
     "indent": ["error", 2],
-    "comma-dangle": ["error", "always-multiline"]
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-use-before-define": [
+      "error", {
+        "functions": false
+      }
+    ]
   }
 }
