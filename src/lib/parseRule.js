@@ -8,5 +8,3 @@ export function parseParams(params) {
     name: parts[1].trim(),
   };
 }
-
-export default function parseRule(atRule) {}

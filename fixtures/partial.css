@@ -1,0 +1,5 @@
+.partial {
+  color: green;
+}
+
+@cpm-import 'static-button' as .button;

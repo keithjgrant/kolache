@@ -1,15 +1,15 @@
 import postcss from 'postcss';
 import path from 'path';
-import cpmImport from './cpmImport';
+import plugin from './plugin';
 
 function run(input, output, opts) {
   if (typeof opts === 'undefined') {
     opts = {
-      importPaths: [path.resolve(__dirname, '../tests/fixtures')],
+      importPaths: [path.resolve(__dirname, '../fixtures')],
     };
   }
-  console.log(__dirname);
-  return postcss([cpmImport(opts)])
+
+  return postcss([plugin(opts)])
     .process(input)
     .then(result => {
       expect(result.css.trim()).toEqual(output.trim());
@@ -20,11 +20,11 @@ function run(input, output, opts) {
 it('should insert basic package', () => {
   return run(
     `
-@cpm-import "static-button" as .button;
+@import "static-button" as .button;
   `,
     `
 {
-$cpm-name: .button;$(cpm-name) {
+$kolache_name: .button;$(kolache_name) {
   display: inline-block;
   padding: 0.3em;
 }
@@ -36,7 +36,7 @@ $cpm-name: .button;$(cpm-name) {
 it('should insert package with custom vars', () => {
   return run(
     `
-@cpm-import "static-button" as .button {
+@import "static-button" as .button {
   $border-radius: 1em;
   $color: inherit;
 }
@@ -45,11 +45,31 @@ it('should insert package with custom vars', () => {
 {
   $border-radius: 1em;
   $color: inherit;
-  $cpm-name: .button;$(cpm-name) {
+  $kolache_name: .button;$(kolache_name) {
   display: inline-block;
   padding: 0.3em;
 }
 }
   `
+  );
+});
+
+it.skip('should import package nested in a partial', () => {
+  return run(
+    `
+@import "partial";
+    `,
+    `
+    .partial {
+      color: green;
+    }
+
+    $kolache_name: .button;$(kolache_name) {
+      display: inline-block;
+      padding: 0.3em;
+    }
+    }
+
+    `
   );
 });

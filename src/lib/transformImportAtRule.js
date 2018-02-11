@@ -1,7 +1,8 @@
 // adapted from https://github.com/jonathantneal/postcss-advanced-variables
 import postcss, { list } from 'postcss';
 import path from 'path';
-// import transformNode from './transform-node';
+import transformRule from './transformRule';
+import replaceImportedPackage from './replaceImportedPackage';
 import manageUnresolved from './manageUnresolved';
 
 const processor = postcss();
@@ -34,26 +35,32 @@ export default function transformImportAtRule(rule, opts) {
 
           // imported nodes
           const nodes = root.nodes.slice(0);
+          const nodesArray = getNodesArray(nodes);
 
           // replace the @import at-rule with the imported nodes
-          // TODO change to an append?
-          rule.replaceWith(nodes);
+          if (alias) {
+            // package import
+            replaceImportedPackage(rule, nodes);
+          } else {
+            // normal partial import
+            rule.replaceWith(nodes);
+          }
 
           // transform all nodes from the import
           // transformNode({ nodes }, opts);
-          getNodesArray(nodes).forEach(child => {
+          nodesArray.forEach(child => {
             if (
               child.type === 'atrule' &&
               child.name.toLowerCase() === 'import'
             ) {
-              transformImportAtRule(child, opts);
+              transformRule(child, opts);
             }
           });
           // nodes.walkAtRules('import', childRule => {
           //   transformImportAtrule(childRule, opts);
           // });
         }),
-      e => {
+      () => {
         // otherwise, if the @import could not be found
         manageUnresolved(
           rule,
@@ -68,7 +75,12 @@ export default function transformImportAtRule(rule, opts) {
 
 // return the @import statement options/details
 function getImportOpts(node, opts) {
-  const [rawid, ...alias] = list.space(node.params);
+  const params = list.space(node.params);
+  const rawid = params[0];
+  let alias;
+  if (isPackageImport(params)) {
+    alias = params[2];
+  }
   const id = trimWrappingURL(rawid);
 
   // current working file and directory
@@ -92,4 +104,8 @@ function trimWrappingQuotes(string) {
 
 function getNodesArray(node) {
   return Array.from(Object(node).nodes || []);
+}
+
+function isPackageImport(params) {
+  return params.length === 3 && params[1].trim() === 'as';
 }

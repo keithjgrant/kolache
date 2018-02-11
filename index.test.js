@@ -1,5 +1,5 @@
 import postcss from 'postcss';
-import plugin from '../index';
+import plugin from './index';
 
 function run(input, output, opts) {
   if (typeof opts === 'undefined') {

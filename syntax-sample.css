@@ -1,14 +1,26 @@
-/* package definition */
-@cpm-package {
-  .$(name) {
-    display: inline-block;
-    padding: $padding;
-    border-radius: $border-radius;
-  }
-}
-
 /* package usage */
-@cpm-import 'cpm-button' as .button {
+@import 'button' as .button {
   $padding: 0.5em 1em;
   $border-radius: 0.5em;
+}
+
+// normal import of a partial
+@import 'partial';
+
+// import a named export?
+@import 'button:modifier' as .button-danger {
+  $color: red;
+}
+
+// exports in button.css
+@export {
+  display: inline-block;
+  padding: $padding;
+  border-radius: $border-radius;
+}
+
+// named export?
+@export as 'modifier' {
+  color: $color;
+  border-color: $color;
 }
