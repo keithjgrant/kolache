@@ -1,4 +1,4 @@
-export function parseParams(params) {
+export default function parseParams(params) {
   const parts = params.split('as');
   if (parts.length !== 2) {
     throw new Error(`Invalid @cpm-import: ${params}`);

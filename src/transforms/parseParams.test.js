@@ -1,4 +1,4 @@
-import { parseParams } from './parseRule';
+import parseParams from './parseParams';
 
 it('should parse params', () => {
   expect(parseParams('"cpm-button" as .button')).toEqual({

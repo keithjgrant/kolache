@@ -1,28 +1,35 @@
 import postcss from 'postcss';
-// import transformRule from './transformRule';
-import { parseParams } from './parseRule';
+import parseParams from './parseParams';
 
-export default function replaceImportedPackage(rule, nodes) {
-  //
-  const param = parseParams(rule.params);
+export default function replaceImportedPackage(importRule, packageNodes) {
+  const params = parseParams(importRule.params);
   const newRule = postcss.rule({
     selector: '',
     raws: { semicolon: true },
   });
-  rule.parent.insertAfter(rule, newRule);
-  rule.walk(userRule => {
+  importRule.parent.insertAfter(importRule, newRule);
+  importRule.walk(userRule => {
     newRule.append(userRule);
   });
   newRule.append(
     postcss.decl({
       prop: '$name',
-      value: param.name,
-      source: rule.source,
+      value: params.name,
+      source: importRule.source,
     })
   );
-  nodes.forEach(packageRule => {
-    newRule.append(packageRule);
+  packageNodes.forEach(packageNode => {
+    if (isMatchingExport(params, packageNode)) {
+      newRule.append(packageNode.nodes);
+    }
   });
 
-  rule.remove();
+  importRule.remove();
+}
+
+function isMatchingExport(importParams, node) {
+  if (node.type !== 'atrule' || node.name !== 'export') {
+    return false;
+  }
+  return true;
 }
