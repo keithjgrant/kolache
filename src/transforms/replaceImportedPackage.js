@@ -15,7 +15,7 @@ export default function replaceImportedPackage(rule, nodes) {
   });
   newRule.append(
     postcss.decl({
-      prop: '$kolache_name',
+      prop: '$name',
       value: param.name,
       source: rule.source,
     })

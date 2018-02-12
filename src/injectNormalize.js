@@ -13,7 +13,6 @@ export default postcss.plugin('postcss-inject-normalize', opts => {
         params: '"normalize.css/normalize.css"',
       });
     } else {
-      console.log('prepending...');
       root.prepend({
         type: 'atrule',
         name: 'import',

@@ -1,6 +1,6 @@
 import postcss from 'postcss';
 import resolve from '@csstools/sass-import-resolve';
-import transformRule from './lib/transformRule';
+import transformRule from './transforms/transformRule';
 
 const DEFAULT_OPTIONS = {
   importPaths: ['node_modules'],

@@ -24,7 +24,7 @@ it('should insert basic package', () => {
   `,
     `
 {
-$kolache_name: .button;$(kolache_name) {
+$name: .button;$(name) {
   display: inline-block;
   padding: 0.3em;
 }
@@ -45,7 +45,7 @@ it('should insert package with custom vars', () => {
 {
   $border-radius: 1em;
   $color: inherit;
-  $kolache_name: .button;$(kolache_name) {
+  $name: .button;$(name) {
   display: inline-block;
   padding: 0.3em;
 }
@@ -65,7 +65,7 @@ it('should import package nested in a partial', () => {
 }
 
  {
-  $kolache_name: .button;$(kolache_name) {
+  $name: .button;$(name) {
   display: inline-block;
   padding: 0.3em;
 }
