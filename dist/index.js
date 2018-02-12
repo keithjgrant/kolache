@@ -145,7 +145,6 @@ function transformImportAtRule(rule, opts) {
         try {
           replaceImportedPackage(rule, nodes);
         } catch (e) {
-          // throw e;
           return manageUnresolved(rule, opts, '@import', 'No matching @export found for "' + id + '"');
         }
       } else {
