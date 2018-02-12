@@ -1,11 +1,13 @@
 import postcss from 'postcss';
-import plugin from './index';
+import kolache from './index';
 
 function run(input, output, opts) {
   if (typeof opts === 'undefined') {
-    opts = {};
+    opts = {
+      includeNormalize: false,
+    };
   }
-  return postcss([plugin(opts)])
+  return postcss([kolache(opts)])
     .process(input)
     .then(result => {
       expect(result.css.trim()).toEqual(output.trim());
@@ -50,6 +52,30 @@ $foo: 1em;
   );
 });
 
+it('variables fall out of scope after block ends', () => {
+  return run(
+    `
+$foo: 1em;
+
+{
+  $foo: 2em;
+  .bar {
+    padding: $foo;
+  }
+}
+.baz {
+  padding: $foo;
+}`,
+    `
+  .bar {
+    padding: 2em;
+  }
+.baz {
+  padding: 1em;
+}`
+  );
+});
+
 it('allows dot in variable value', () => {
   return run(
     `
@@ -64,4 +90,22 @@ it('allows dot in variable value', () => {
     }
   `
   );
+});
+
+it('should import normalize.css', () => {
+  return postcss([kolache()])
+    .process('')
+    .then(result => {
+      expect(result.css.trim()).toMatchSnapshot();
+      expect(result.warnings().length).toBe(0);
+    });
+});
+
+it('should import normalize.css after any @charset', () => {
+  return postcss([kolache()])
+    .process('@charset "utf-8"; .foo{ color: green; }')
+    .then(result => {
+      expect(result.css.trim()).toMatchSnapshot();
+      expect(result.warnings().length).toBe(0);
+    });
 });

@@ -1,27 +1,33 @@
-# PostCSS CPM [![Build Status][ci-img]][ci]
+# Kolache [![Build Status][ci-img]][ci]
 
-[PostCSS] plugin for importing and distributing CSS packages.
+Import and distribute CSS packages.
 
-[PostCSS]: https://github.com/postcss/postcss
-[ci-img]:  https://travis-ci.org/keithjgrant/postcss-cpm.svg
-[ci]:      https://travis-ci.org/keithjgrant/postcss-cpm
+[postcss]: https://github.com/postcss/postcss
+[ci-img]: https://travis-ci.org/keithjgrant/postcss-cpm.svg
+[ci]: https://travis-ci.org/keithjgrant/postcss-cpm
+
+Importing a Kolache package (in main.css):
 
 ```css
-.foo {
-    /* Input example */
-}
+@import 'button' as .button;
 ```
 
+Defining a Kolache package (in button.css):
+
 ```css
-.foo {
-  /* Output example */
+@export {
+  $(name) {
+    display: inline-block;
+    padding: 0.5em;
+    background-color: blue;
+  }
 }
 ```
 
 ## Usage
 
 ```js
-postcss([ require('postcss-cpm') ])
+postcss([require('kolache')]);
 ```
 
 See [PostCSS] docs for examples for your environment.

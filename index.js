@@ -1,11 +1,17 @@
 import postcss from 'postcss';
 import precss from 'precss';
+import injectNormalize from './src/injectNormalize';
 import kolachePlugin from './src/plugin';
 
-export default postcss.plugin('kolache', opts => {
-  opts = opts || {};
+const DEFAULT_OPTIONS = {
+  includeNormalize: true,
+  importPaths: ['node_modules'],
+};
 
-  const plugins = [kolachePlugin(opts), precss(opts)];
+export default postcss.plugin('kolache', opts => {
+  opts = Object.assign({}, DEFAULT_OPTIONS, opts);
+
+  const plugins = [injectNormalize(opts), kolachePlugin(opts), precss(opts)];
 
   return (root, result) =>
     plugins.reduce(

@@ -2,6 +2,12 @@ import postcss from 'postcss';
 import resolve from '@csstools/sass-import-resolve';
 import transformRule from './lib/transformRule';
 
+const DEFAULT_OPTIONS = {
+  importPaths: ['node_modules'],
+  importPromise: [],
+  importCache: {},
+};
+
 function resolveImport(opts) {
   return (id, cwd) => {
     return resolve(id, { cwd, readFile: true, cache: opts.importCache });
@@ -10,9 +16,7 @@ function resolveImport(opts) {
 
 export default postcss.plugin('postcss-kolache', opts => {
   return function (root, result) {
-    opts.importPromise = [];
-    opts.importPaths = Object(opts).importPaths || [];
-    opts.importCache = Object(Object(opts).importCache);
+    opts = Object.assign(DEFAULT_OPTIONS, opts);
     opts.importResolve = Object(opts).resolve || resolveImport(opts);
     opts.result = result;
 

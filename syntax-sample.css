@@ -14,13 +14,17 @@
 
 // exports in button.css
 @export {
-  display: inline-block;
-  padding: $padding;
-  border-radius: $border-radius;
+  $(name) {
+    display: inline-block;
+    padding: $padding;
+    border-radius: $border-radius;
+  }
 }
 
 // named export?
 @export as 'modifier' {
-  color: $color;
-  border-color: $color;
+  $(name) {
+    color: $color;
+    border-color: $color;
+  }
 }

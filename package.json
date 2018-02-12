@@ -25,6 +25,7 @@
   "homepage": "https://github.com/keithjgrant/kolache",
   "dependencies": {
     "@csstools/sass-import-resolve": "^1.0.0",
+    "normalize.css": "^8.0.0",
     "postcss": "^6.0.16",
     "precss": "^3.1.0"
   },

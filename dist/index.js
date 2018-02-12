@@ -6,16 +6,7 @@ var postcss = require('postcss');
 var postcss__default = _interopDefault(postcss);
 var path = _interopDefault(require('path'));
 var resolve = _interopDefault(require('@csstools/sass-import-resolve'));
-var util = _interopDefault(require('util'));
-require('postcss-import');
-require('precss');
-require('postcss-advanced-variables');
-require('postcss-atroot');
-require('postcss-extend-rule');
-require('postcss-nested');
-require('postcss-preset-env');
-require('postcss-property-lookup');
-require('postcss-partial-import');
+var precss = _interopDefault(require('precss'));
 
 function parseParams(params) {
   const parts = params.split('as');
@@ -28,6 +19,32 @@ function parseParams(params) {
   };
 }
 
+// import transformRule from './transformRule';
+function replaceImportedPackage(rule, nodes) {
+  //
+  const param = parseParams(rule.params);
+  const newRule = postcss__default.rule({
+    selector: '',
+    raws: { semicolon: true },
+  });
+  rule.parent.insertAfter(rule, newRule);
+  rule.walk(userRule => {
+    newRule.append(userRule);
+  });
+  newRule.append(
+    postcss__default.decl({
+      prop: '$kolache_name',
+      value: param.name,
+      source: rule.source,
+    })
+  );
+  nodes.forEach(packageRule => {
+    newRule.append(packageRule);
+  });
+
+  rule.remove();
+}
+
 function manageUnresolved(node, opts, word, message) {
   if (opts.unresolved === 'warn') {
     node.warn(opts.result, message, { word });
@@ -37,7 +54,6 @@ function manageUnresolved(node, opts, word, message) {
 }
 
 // adapted from https://github.com/jonathantneal/postcss-advanced-variables
-// import transformNode from './transform-node';
 const processor = postcss__default();
 
 // transform @import at-rules
@@ -46,7 +62,6 @@ function transformImportAtRule(rule, opts) {
   const { id, alias, cwf, cwd } = getImportOpts(rule, opts);
 
   const cwds = [cwd].concat(opts.importPaths);
-  console.log('all CWDS', cwds);
 
   // promise the resolved file and its contents using the file resolver
   const importPromise = cwds.reduce(
@@ -55,60 +70,66 @@ function transformImportAtRule(rule, opts) {
     Promise.reject()
   );
 
-  opts.importPromise.push(
-    importPromise.then(
-      // promise the processed file
-      ({ file, contents }) =>
-        processor.process(contents, { from: file }).then(({ root }) => {
-          // push a dependency message
-          opts.result.messages.push({
-            type: 'dependency',
-            file,
-            parent: cwf,
-          });
+  return importPromise.then(
+    // promise the processed file
+    ({ file, contents }) =>
+      processor.process(contents, { from: file }).then(({ root }) => {
+        // push a dependency message
+        opts.result.messages.push({
+          type: 'dependency',
+          file,
+          parent: cwf,
+        });
 
-          // imported nodes
-          const nodes = root.nodes.slice(0);
+        // imported nodes
+        const nodes = root.nodes.slice(0);
 
-          // replace the @import at-rule with the imported nodes
-          // TODO change to an append?
+        // replace the @import at-rule with the imported nodes
+        if (alias) {
+          // package import
+          replaceImportedPackage(rule, nodes);
+        } else {
+          // normal partial import
           rule.replaceWith(nodes);
+        }
 
-          // transform all nodes from the import
-          // transformNode({ nodes }, opts);
-          getNodesArray(nodes).forEach(child => {
-            if (
-              child.type === 'atrule' &&
-              child.name.toLowerCase() === 'import'
-            ) {
-              transformImportAtRule(child, opts);
-            }
-          });
-          // nodes.walkAtRules('import', childRule => {
-          //   transformImportAtrule(childRule, opts);
-          // });
-        }),
-      e => {
-        console.log(e, e.message);
-        // otherwise, if the @import could not be found
-        manageUnresolved(
-          rule,
-          opts,
-          '@import',
-          `Could not resolve the @import for "${id}"`
-        );
-      }
-    )
+        // transform all nodes from the import
+        // transformNode({ nodes }, opts);
+        const childPromises = [];
+        nodes.forEach(child => {
+          if (
+            child.type === 'atrule' &&
+            child.name.toLowerCase() === 'import'
+          ) {
+            childPromises.push(transformRule(child, opts));
+          }
+        });
+
+        return Promise.all(childPromises);
+      }),
+    () => {
+      // otherwise, if the @import could not be found
+      manageUnresolved(
+        rule,
+        opts,
+        '@import',
+        `Could not resolve the @import for "${id}"`
+      );
+    }
   );
 }
 
 // return the @import statement options/details
 function getImportOpts(node, opts) {
-  const [rawid, ...alias] = postcss.list.space(node.params);
+  const params = postcss.list.space(node.params);
+  const rawid = params[0];
+  let alias;
+  if (isPackageImport(params)) {
+    alias = params[2];
+  }
   const id = trimWrappingURL(rawid);
 
   // current working file and directory
-  console.log('import node: ', node.source, opts.result);
   const cwf =
     node.source && node.source.input && node.source.input.file ||
     opts.result.from;
@@ -127,18 +148,27 @@ function trimWrappingQuotes(string) {
   return string.replace(/^("|')([\W\w]*)\1$/, '$2');
 }
 
-function getNodesArray(node) {
-  return Array.from(Object(node).nodes || []);
+function isPackageImport(params) {
+  return params.length === 3 && params[1].trim() === 'as';
+}
+
+function transformRule(rule, opts) {
+  if (rule.type !== 'atrule') {
+    return Promise.resolve();
+  }
+  if (rule.name.toLowerCase() !== 'import') {
+    return Promise.resolve();
+  }
+  return transformImportAtRule(rule, opts);
 }
 
 function resolveImport(opts) {
   return (id, cwd) => {
-    console.log('CWD', cwd);
     return resolve(id, { cwd, readFile: true, cache: opts.importCache });
   };
 }
 
-var cpmImport = postcss__default.plugin('postcss-cpm', opts => {
+var kolachePlugin = postcss__default.plugin('postcss-kolache', opts => {
   return function (root, result) {
     opts.importPromise = [];
     opts.importPaths = Object(opts).importPaths || [];
@@ -146,73 +176,21 @@ var cpmImport = postcss__default.plugin('postcss-cpm', opts => {
     opts.importResolve = Object(opts).resolve || resolveImport(opts);
     opts.result = result;
 
-    root.walkAtRules('cpm-import', rule => {
-      const param = parseParams(rule.params);
-      const newRule = postcss__default.rule({
-        selector: '',
-        raws: { semicolon: true },
-      });
-      rule.parent.insertAfter(rule, newRule);
+    const promises = [];
 
-      rule.walk(childNode => {
-        newRule.append(childNode.clone());
-      });
-      newRule.append(
-        postcss__default.decl({
-          prop: '$cpm-name',
-          value: param.name,
-          source: rule.source,
-        })
-      );
-      const importRule = postcss__default.atRule({
-        name: 'import',
-        params: param.filename,
-        source: rule.source,
-      });
-      newRule.append(importRule);
-      rule.remove();
-      transformImportAtRule(importRule, opts);
+    root.walkAtRules('import', rule => {
+      promises.push(transformRule(rule, opts));
     });
 
-    return Promise.all(opts.importPromise);
-  };
-});
-
-postcss__default.plugin('postcss-cpm', opts => {
-  return function (root, result) {
-    root.walkAtRules('cpm-package', rule => {
-      console.log('cpm-package', rule);
-    });
-
-    root.walkAtRules('cpm-import', rule => {});
-  };
-});
-
-const logAST = postcss__default.plugin('postcss-log-ast', opts => {
-  return function (root, result) {
-    console.log(util.inspect(root, false, null));
+    return Promise.all(promises);
   };
 });
 
 var index = postcss__default.plugin('kolache', opts => {
   opts = opts || {};
 
-  const plugins = [
-    cpmImport(opts),
-    // logAST,
-    // precss(opts),
-    // postcssExtendRule,
-    // postcssAdvancedVariables,
-    // postcssPresetEnv,
-    // postcssAtroot,
-    // postcssPropertyLookup,
-    // postcssNested,
-  ];
+  const plugins = [kolachePlugin(opts), precss(opts)];
 
-  // initialize all plugins
-  // const initializedPlugins = plugins.map(plugin => plugin(opts));
-
-  // process css with all plugins
   return (root, result) =>
     plugins.reduce(
       (promise, plugin) => promise.then(() => plugin(result.root, result)),
