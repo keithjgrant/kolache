@@ -1,14 +1,24 @@
 // adapted from https://github.com/jonathantneal/postcss-advanced-variables
 import postcss, { list } from 'postcss';
 import path from 'path';
-import transformRule from './transformRule';
+// import transformRule from './transformRule';
 import replaceImportedPackage from './replaceImportedPackage';
 import manageUnresolved from './manageUnresolved';
 
 const processor = postcss();
 
+export default function transformRule(rule, opts) {
+  if (rule.type !== 'atrule') {
+    return Promise.resolve();
+  }
+  if (rule.name.toLowerCase() !== 'import') {
+    return Promise.resolve();
+  }
+  return transformImportAtRule(rule, opts);
+}
+
 // transform @import at-rules
-export default function transformImportAtRule(rule, opts) {
+export function transformImportAtRule(rule, opts) {
   // @import options
   const { id, alias, cwf, cwd } = getImportOpts(rule, opts);
 
@@ -23,8 +33,8 @@ export default function transformImportAtRule(rule, opts) {
 
   return importPromise.then(
     // promise the processed file
-    ({ file, contents }) =>
-      processor.process(contents, { from: file }).then(({ root }) => {
+    ({ file, contents }) => {
+      return processor.process(contents, { from: file }).then(({ root }) => {
         // push a dependency message
         opts.result.messages.push({
           type: 'dependency',
@@ -38,7 +48,16 @@ export default function transformImportAtRule(rule, opts) {
         // replace the @import at-rule with the imported nodes
         if (alias) {
           // package import
-          replaceImportedPackage(rule, nodes);
+          try {
+            replaceImportedPackage(rule, nodes);
+          } catch (e) {
+            return manageUnresolved(
+              rule,
+              opts,
+              '@import',
+              `No matching @export found for "${id}"`
+            );
+          }
         } else {
           // normal partial import
           rule.replaceWith(nodes);
@@ -57,7 +76,8 @@ export default function transformImportAtRule(rule, opts) {
         });
 
         return Promise.all(childPromises);
-      }),
+      });
+    },
     () => {
       // otherwise, if the @import could not be found
       manageUnresolved(

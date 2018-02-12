@@ -16,7 +16,8 @@
   "scripts": {
     "test": "jest && eslint *.js",
     "test:watch": "jest --watch",
-    "build": "rollup index.js --output.format cjs --output.file dist/index.js"
+    "build-": "rollup index.js --output.format cjs --output.file dist/index.js",
+    "build": "rollup -c .rollup.js"
   },
   "main": "dist/index.js",
   "bugs": {
@@ -32,10 +33,12 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^22.2.2",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.15.0",
     "eslint-config-postcss": "^2.0.2",
     "jest": "^21.0.0",
-    "rollup": "^0.55.5"
+    "rollup": "^0.55.5",
+    "rollup-plugin-babel": "^3.0.3"
   }
 }

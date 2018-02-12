@@ -3,6 +3,18 @@ import parseParams from './parseParams';
 
 export default function replaceImportedPackage(importRule, packageNodes) {
   const params = parseParams(importRule.params);
+  let matchingExportContents = null;
+
+  packageNodes.forEach(packageNode => {
+    if (isMatchingExport(params, packageNode)) {
+      matchingExportContents = packageNode.nodes;
+    }
+  });
+
+  if (!matchingExportContents) {
+    throw new Error('No matching export found');
+  }
+
   const newRule = postcss.rule({
     selector: '',
     raws: { semicolon: true },
@@ -18,11 +30,7 @@ export default function replaceImportedPackage(importRule, packageNodes) {
       source: importRule.source,
     })
   );
-  packageNodes.forEach(packageNode => {
-    if (isMatchingExport(params, packageNode)) {
-      newRule.append(packageNode.nodes);
-    }
-  });
+  newRule.append(matchingExportContents);
 
   importRule.remove();
 }

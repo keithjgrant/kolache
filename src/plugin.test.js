@@ -76,3 +76,37 @@ it('should import package nested in a partial', () => {
     `
   );
 });
+
+it.skip('should log a warning if import fails', () => {
+  const input = '@import "invalid";';
+  postcss([
+    plugin({
+      importPaths: [path.resolve(__dirname, '../fixtures')],
+    }),
+  ])
+    .process(input)
+    .then(
+      result => {
+        expect(result.css.trim()).toEqual('');
+        expect(result.warnings().length).toBe(1);
+      },
+      err => {
+        console.log('ERR');
+        expect(true).toBeTrue();
+      }
+    );
+});
+
+it.skip('should log a warning if no package found in imported file', () => {
+  const input = '@import "partial" as .button;';
+  postcss([
+    plugin({
+      importPaths: [path.resolve(__dirname, '../fixtures')],
+    }),
+  ])
+    .process(input)
+    .then(result => {
+      expect(result.css.trim()).toEqual('');
+      expect(result.warnings().length).toBe(1);
+    });
+});
