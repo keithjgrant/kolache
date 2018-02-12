@@ -16,7 +16,8 @@
   "scripts": {
     "test": "NODE_ENV=development jest && eslint *.js",
     "test:watch": "NODE_ENV=development jest --watch",
-    "build-": "rollup index.js --output.format cjs --output.file dist/index.js",
+    "build":
+      "rollup src/index.js --output.format cjs --output.file dist/index.js",
     "build": "NODE_ENV=production rollup -c .rollup.js"
   },
   "main": "dist/index.js",

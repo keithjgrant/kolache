@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import precss from 'precss';
-import injectNormalize from './src/injectNormalize';
-import kolachePlugin from './src/plugin';
+import injectNormalize from './injectNormalize';
+import kolachePlugin from './plugin';
 
 const DEFAULT_OPTIONS = {
   includeNormalize: true,

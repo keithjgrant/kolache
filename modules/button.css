@@ -1,0 +1,14 @@
+@export {
+  $(name) {
+    text-color: white;
+    background-color: $brand-color;
+    padding: $padding-offset;
+    border-radius: $border-radius;
+  }
+}
+
+@export as 'variant' {
+  $(name) {
+    border-color: $color;
+  }
+}
