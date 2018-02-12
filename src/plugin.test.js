@@ -10,7 +10,7 @@ function run(input, output, opts) {
   }
 
   return postcss([plugin(opts)])
-    .process(input)
+    .process(input, { from: undefined })
     .then(result => {
       expect(result.css.trim()).toEqual(output.trim());
       expect(result.warnings().length).toBe(0);
@@ -84,7 +84,7 @@ it.skip('should log a warning if import fails', () => {
       importPaths: [path.resolve(__dirname, '../fixtures')],
     }),
   ])
-    .process(input)
+    .process(input, { from: undefined })
     .then(
       result => {
         expect(result.css.trim()).toEqual('');
@@ -104,7 +104,7 @@ it.skip('should log a warning if no package found in imported file', () => {
       importPaths: [path.resolve(__dirname, '../fixtures')],
     }),
   ])
-    .process(input)
+    .process(input, { from: undefined })
     .then(result => {
       expect(result.css.trim()).toEqual('');
       expect(result.warnings().length).toBe(1);

@@ -8,7 +8,7 @@ function run(input, output, opts) {
     };
   }
   return postcss([kolache(opts)])
-    .process(input)
+    .process(input, { from: undefined })
     .then(result => {
       expect(result.css.trim()).toEqual(output.trim());
       expect(result.warnings().length).toBe(0);
@@ -94,7 +94,7 @@ it('allows dot in variable value', () => {
 
 it('should import normalize.css', () => {
   return postcss([kolache()])
-    .process('')
+    .process('', { from: undefined })
     .then(result => {
       expect(result.css.trim()).toMatchSnapshot();
       expect(result.warnings().length).toBe(0);
@@ -103,7 +103,7 @@ it('should import normalize.css', () => {
 
 it('should import normalize.css after any @charset', () => {
   return postcss([kolache()])
-    .process('@charset "utf-8"; .foo{ color: green; }')
+    .process('@charset "utf-8"; .foo{ color: green; }', { from: undefined })
     .then(result => {
       expect(result.css.trim()).toMatchSnapshot();
       expect(result.warnings().length).toBe(0);
