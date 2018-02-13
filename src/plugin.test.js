@@ -56,6 +56,26 @@ it('should insert package with custom vars', () => {
   );
 });
 
+it('should import a named export', () => {
+  return run(
+    `
+@import "static-button:variant" as .button-danger {
+  $color: red;
+}
+  `,
+    `
+{
+  $color: red;
+  $name: .button-danger;
+  $(name) {
+    color: $color;
+    border-color: $color;
+  }
+}
+`
+  );
+});
+
 it('should import package nested in a partial', () => {
   return run(
     `
@@ -77,6 +97,7 @@ it('should import package nested in a partial', () => {
   );
 });
 
+// these are working correctly under normal usage. Unsure how to test
 it.skip('should log a warning if import fails', () => {
   const input = '@import "invalid";';
   postcss([
@@ -91,7 +112,6 @@ it.skip('should log a warning if import fails', () => {
         expect(result.warnings().length).toBe(1);
       },
       err => {
-        console.log('ERR');
         expect(true).toBeTrue();
       }
     );

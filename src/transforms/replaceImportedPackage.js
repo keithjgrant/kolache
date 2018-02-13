@@ -1,12 +1,18 @@
 import postcss from 'postcss';
-import parseParams from './parseParams';
+import { parseExportParams } from './parseParams';
 
-export default function replaceImportedPackage(importRule, packageNodes) {
-  const params = parseParams(importRule.params);
+export default function replaceImportedPackage(
+  importRule,
+  packageNodes,
+  importParams
+) {
   let matchingExportContents = null;
 
   packageNodes.forEach(packageNode => {
-    if (isMatchingExport(params, packageNode)) {
+    if (
+      !matchingExportContents &&
+      isMatchingExport(importParams, packageNode)
+    ) {
       matchingExportContents = packageNode.nodes;
     }
   });
@@ -26,7 +32,7 @@ export default function replaceImportedPackage(importRule, packageNodes) {
   newRule.append(
     postcss.decl({
       prop: '$name',
-      value: params.name,
+      value: importParams.alias,
       source: importRule.source,
     })
   );
@@ -35,9 +41,13 @@ export default function replaceImportedPackage(importRule, packageNodes) {
   importRule.remove();
 }
 
-function isMatchingExport(importParams, node) {
-  if (node.type !== 'atrule' || node.name !== 'export') {
+function isMatchingExport(importParams, importedNode) {
+  if (importedNode.type !== 'atrule' || importedNode.name !== 'export') {
     return false;
   }
-  return true;
+  if (!importParams.namedExport && importedNode.params.trim() === '') {
+    return true;
+  }
+  const exportAlias = parseExportParams(importedNode.params);
+  return exportAlias === importParams.namedExport;
 }

@@ -30,23 +30,94 @@ var injectNormalize = postcss__default.plugin('postcss-inject-normalize', functi
   };
 });
 
-function parseParams(params) {
-  var parts = params.split('as');
-  if (parts.length !== 2) {
-    throw new Error('Invalid @cpm-import: ' + params);
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
   }
-  return {
-    filename: parts[0].trim(),
-    name: parts[1].trim()
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
   };
+}();
+
+// return the @import statement options/details
+function parseImportParams(node, opts) {
+  var params = postcss.list.space(node.params);
+  var rawid = params[0];
+  var alias = void 0;
+  if (isPackageImport(params)) {
+    alias = params[2];
+  }
+
+  var _trimWrappingURL$spli = trimWrappingURL(rawid).split(':'),
+      _trimWrappingURL$spli2 = slicedToArray(_trimWrappingURL$spli, 2),
+      id = _trimWrappingURL$spli2[0],
+      namedExport = _trimWrappingURL$spli2[1];
+
+  // current working file and directory
+
+
+  var cwf = node.source && node.source.input && node.source.input.file || opts.result.from;
+  var cwd = cwf ? path.dirname(cwf) : opts.importRoot;
+
+  return { id: id, alias: alias, cwf: cwf, cwd: cwd, namedExport: namedExport };
 }
 
-function replaceImportedPackage(importRule, packageNodes) {
-  var params = parseParams(importRule.params);
+// return a string with the wrapping url() and quotes trimmed
+function trimWrappingURL(string) {
+  return trimWrappingQuotes(string.replace(/^url\(([\W\w]*)\)$/, '$1'));
+}
+
+// return a string with the wrapping quotes trimmed
+function trimWrappingQuotes(string) {
+  return string.replace(/^("|')([\W\w]*)\1$/, '$2');
+}
+
+function isPackageImport(params) {
+  return params.length === 3 && params[1].trim() === 'as';
+}
+
+function parseExportParams(params) {
+  var parts = postcss.list.space(params);
+  if (parts[0] === 'as') {
+    return trimWrappingQuotes(parts[1]);
+  }
+  return false;
+}
+
+function replaceImportedPackage(importRule, packageNodes, importParams) {
   var matchingExportContents = null;
 
   packageNodes.forEach(function (packageNode) {
-    if (isMatchingExport(params, packageNode)) {
+    if (!matchingExportContents && isMatchingExport(importParams, packageNode)) {
       matchingExportContents = packageNode.nodes;
     }
   });
@@ -65,7 +136,7 @@ function replaceImportedPackage(importRule, packageNodes) {
   });
   newRule.append(postcss__default.decl({
     prop: '$name',
-    value: params.name,
+    value: importParams.alias,
     source: importRule.source
   }));
   newRule.append(matchingExportContents);
@@ -73,11 +144,15 @@ function replaceImportedPackage(importRule, packageNodes) {
   importRule.remove();
 }
 
-function isMatchingExport(importParams, node) {
-  if (node.type !== 'atrule' || node.name !== 'export') {
+function isMatchingExport(importParams, importedNode) {
+  if (importedNode.type !== 'atrule' || importedNode.name !== 'export') {
     return false;
   }
-  return true;
+  if (!importParams.namedExport && importedNode.params.trim() === '') {
+    return true;
+  }
+  var exportAlias = parseExportParams(importedNode.params);
+  return exportAlias === importParams.namedExport;
 }
 
 function manageUnresolved(node, opts, word, message) {
@@ -88,8 +163,6 @@ function manageUnresolved(node, opts, word, message) {
   }
 }
 
-// adapted from https://github.com/jonathantneal/postcss-advanced-variables
-// import transformRule from './transformRule';
 var processor = postcss__default();
 
 function transformRule(rule, opts) {
@@ -105,18 +178,14 @@ function transformRule(rule, opts) {
 // transform @import at-rules
 function transformImportAtRule(rule, opts) {
   // @import options
-  var _getImportOpts = getImportOpts(rule, opts),
-      id = _getImportOpts.id,
-      alias = _getImportOpts.alias,
-      cwf = _getImportOpts.cwf,
-      cwd = _getImportOpts.cwd;
+  var importParams = parseImportParams(rule, opts);
 
-  var cwds = [cwd].concat(opts.importPaths);
+  var cwds = [importParams.cwd].concat(opts.importPaths);
 
   // promise the resolved file and its contents using the file resolver
   var importPromise = cwds.reduce(function (promise, thiscwd) {
     return promise.catch(function () {
-      return opts.importResolve(id, thiscwd, opts);
+      return opts.importResolve(importParams.id, thiscwd, opts);
     });
   }, Promise.reject());
 
@@ -133,19 +202,19 @@ function transformImportAtRule(rule, opts) {
       opts.result.messages.push({
         type: 'dependency',
         file: file,
-        parent: cwf
+        parent: importParams.cwf
       });
 
       // imported nodes
       var nodes = root.nodes.slice(0);
 
       // replace the @import at-rule with the imported nodes
-      if (alias) {
+      if (importParams.alias) {
         // package import
         try {
-          replaceImportedPackage(rule, nodes);
+          replaceImportedPackage(rule, nodes, importParams);
         } catch (e) {
-          return manageUnresolved(rule, opts, '@import', 'No matching @export found for "' + id + '"');
+          return manageUnresolved(rule, opts, '@import', 'No matching @export found for "' + importParams.id + '"');
         }
       } else {
         // normal partial import
@@ -165,39 +234,8 @@ function transformImportAtRule(rule, opts) {
     });
   }, function () {
     // otherwise, if the @import could not be found
-    manageUnresolved(rule, opts, '@import', 'Could not resolve the @import for "' + id + '"');
+    manageUnresolved(rule, opts, '@import', 'Could not resolve the @import for "' + importParams.id + '"');
   });
-}
-
-// return the @import statement options/details
-function getImportOpts(node, opts) {
-  var params = postcss.list.space(node.params);
-  var rawid = params[0];
-  var alias = void 0;
-  if (isPackageImport(params)) {
-    alias = params[2];
-  }
-  var id = trimWrappingURL(rawid);
-
-  // current working file and directory
-  var cwf = node.source && node.source.input && node.source.input.file || opts.result.from;
-  var cwd = cwf ? path.dirname(cwf) : opts.importRoot;
-
-  return { id: id, alias: alias, cwf: cwf, cwd: cwd };
-}
-
-// return a string with the wrapping url() and quotes trimmed
-function trimWrappingURL(string) {
-  return trimWrappingQuotes(string.replace(/^url\(([\W\w]*)\)$/, '$1'));
-}
-
-// return a string with the wrapping quotes trimmed
-function trimWrappingQuotes(string) {
-  return string.replace(/^("|')([\W\w]*)\1$/, '$2');
-}
-
-function isPackageImport(params) {
-  return params.length === 3 && params[1].trim() === 'as';
 }
 
 var DEFAULT_OPTIONS = {

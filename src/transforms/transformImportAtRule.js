@@ -1,9 +1,7 @@
-// adapted from https://github.com/jonathantneal/postcss-advanced-variables
-import postcss, { list } from 'postcss';
-import path from 'path';
-// import transformRule from './transformRule';
+import postcss from 'postcss';
 import replaceImportedPackage from './replaceImportedPackage';
 import manageUnresolved from './manageUnresolved';
+import { parseImportParams } from './parseParams';
 
 const processor = postcss();
 
@@ -20,14 +18,14 @@ export default function transformRule(rule, opts) {
 // transform @import at-rules
 export function transformImportAtRule(rule, opts) {
   // @import options
-  const { id, alias, cwf, cwd } = getImportOpts(rule, opts);
+  const importParams = parseImportParams(rule, opts);
 
-  const cwds = [cwd].concat(opts.importPaths);
+  const cwds = [importParams.cwd].concat(opts.importPaths);
 
   // promise the resolved file and its contents using the file resolver
   const importPromise = cwds.reduce(
     (promise, thiscwd) =>
-      promise.catch(() => opts.importResolve(id, thiscwd, opts)),
+      promise.catch(() => opts.importResolve(importParams.id, thiscwd, opts)),
     Promise.reject()
   );
 
@@ -39,23 +37,23 @@ export function transformImportAtRule(rule, opts) {
         opts.result.messages.push({
           type: 'dependency',
           file,
-          parent: cwf,
+          parent: importParams.cwf,
         });
 
         // imported nodes
         const nodes = root.nodes.slice(0);
 
         // replace the @import at-rule with the imported nodes
-        if (alias) {
+        if (importParams.alias) {
           // package import
           try {
-            replaceImportedPackage(rule, nodes);
+            replaceImportedPackage(rule, nodes, importParams);
           } catch (e) {
             return manageUnresolved(
               rule,
               opts,
               '@import',
-              `No matching @export found for "${id}"`
+              `No matching @export found for "${importParams.id}"`
             );
           }
         } else {
@@ -84,41 +82,8 @@ export function transformImportAtRule(rule, opts) {
         rule,
         opts,
         '@import',
-        `Could not resolve the @import for "${id}"`
+        `Could not resolve the @import for "${importParams.id}"`
       );
     }
   );
-}
-
-// return the @import statement options/details
-function getImportOpts(node, opts) {
-  const params = list.space(node.params);
-  const rawid = params[0];
-  let alias;
-  if (isPackageImport(params)) {
-    alias = params[2];
-  }
-  const id = trimWrappingURL(rawid);
-
-  // current working file and directory
-  const cwf =
-    node.source && node.source.input && node.source.input.file ||
-    opts.result.from;
-  const cwd = cwf ? path.dirname(cwf) : opts.importRoot;
-
-  return { id, alias, cwf, cwd };
-}
-
-// return a string with the wrapping url() and quotes trimmed
-function trimWrappingURL(string) {
-  return trimWrappingQuotes(string.replace(/^url\(([\W\w]*)\)$/, '$1'));
-}
-
-// return a string with the wrapping quotes trimmed
-function trimWrappingQuotes(string) {
-  return string.replace(/^("|')([\W\w]*)\1$/, '$2');
-}
-
-function isPackageImport(params) {
-  return params.length === 3 && params[1].trim() === 'as';
 }
