@@ -6,21 +6,46 @@ Import and distribute CSS packages.
 [ci-img]: https://travis-ci.org/keithjgrant/postcss-cpm.svg
 [ci]: https://travis-ci.org/keithjgrant/postcss-cpm
 
-Importing a Kolache package (in main.css):
+Package and publish configurable CSS modules via npm.
 
 ```css
+/* main.css */
 @import 'button' as .button;
-```
+@import 'button:variant' as .button--danger {
+  $color: red;
+}
 
-Defining a Kolache package (in button.css):
-
-```css
+/* button.css */
 @export {
   $(name) {
     display: inline-block;
     padding: 0.5em;
+    border: 1px solid blue;
     background-color: blue;
   }
+}
+
+@export as 'variant' {
+  $(name) {
+    border-color: $color;
+    color: $color;
+  }
+}
+```
+
+Compiles to:
+
+```css
+.button {
+  display: inline-block;
+  padding: 0.5em;
+  border: 1px solid blue;
+  background-color: blue;
+}
+
+.button--danger {
+  border-color: red;
+  color: red;
 }
 ```
 
