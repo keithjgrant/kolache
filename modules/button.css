@@ -1,14 +1,23 @@
 @export {
+  $font-weight: normal !default;
+
   $(name) {
-    text-color: white;
-    background-color: $brand-color;
+    color: $white;
+    background-color: $color-primary;
     padding: $padding-offset;
+    border: 0;
     border-radius: $border-radius;
+    font-weight: $font-weight;
   }
 }
 
-@export as 'variant' {
+@export as 'color' {
   $(name) {
-    border-color: $color;
+    background-color: $color;
+  }
+}
+
+@export as 'size' {
+  $(name) {
   }
 }

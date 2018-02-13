@@ -1,0 +1,25 @@
+$white: #fff;
+$black: #000;
+
+$color-primary: hsl(207, 56%, 47%);
+$color-danger: hsl(0, 46%, 50%);
+$color-success: hsl(180, 56%, 40%);
+$color-warning: hsl(30, 66%, 57%);
+
+$padding: 0.8em;
+$padding-offset: 0.3em 0.8em;
+
+$border-radius: 0.2em;
+
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol' !default;
+$font-family-heading: $font-family !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 500 !default;
+$font-weight-bold: 700 !default;
+
+$include-base-styles: true !default;
+if $include-base-styles {
+  @import 'base';
+}

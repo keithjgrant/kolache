@@ -1,4 +1,6 @@
-# Kolache [![Build Status][ci-img]][ci]
+# Kolache
+
+[![Build Status][ci-img]][ci]
 
 Import and distribute CSS packages.
 
@@ -8,7 +10,7 @@ Import and distribute CSS packages.
 
 Package and publish configurable CSS modules via npm.
 
-```css
+```scss
 /* main.css */
 @import 'button' as .button;
 @import 'button:variant' as .button--danger {
