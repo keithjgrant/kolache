@@ -3,8 +3,8 @@
 Import and distribute CSS packages.
 
 [postcss]: https://github.com/postcss/postcss
-[ci-img]: https://travis-ci.org/keithjgrant/postcss-cpm.svg
-[ci]: https://travis-ci.org/keithjgrant/postcss-cpm
+[ci-img]: https://travis-ci.org/keithjgrant/kolache.svg
+[ci]: https://travis-ci.org/keithjgrant/kolache
 
 Package and publish configurable CSS modules via npm.
 
