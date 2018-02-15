@@ -6,8 +6,10 @@ $color-danger: hsl(0, 46%, 50%);
 $color-success: hsl(180, 56%, 40%);
 $color-warning: hsl(30, 66%, 57%);
 
+$body-color: hsl(207, 10%, 10%);
+
 $padding: 0.8em;
-$padding-offset: 0.3em 0.8em;
+$offset-padding: 0.3em 0.8em;
 
 $border-radius: 0.2em;
 
@@ -19,7 +21,4 @@ $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
 $font-weight-bold: 700 !default;
 
-$include-base-styles: true !default;
-if $include-base-styles {
-  @import 'base';
-}
+@import 'base';

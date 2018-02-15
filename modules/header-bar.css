@@ -1,0 +1,27 @@
+@export {
+  $border: 1px solid #808080 !default;
+  $text-transform: uppercase !default;
+  $hover-color: $color-primary !default;
+
+  $(name) {
+    display: flex;
+    align-items: baseline;
+    border-bottom: $border;
+
+    &__brand {
+      margin-right: 1em;
+
+      a {
+        padding: $offset-padding;
+        font-weight: $font-weight-bold;
+        color: $body-color;
+        text-transform: $text-transform;
+        text-decoration: none;
+
+        &:hover {
+          color: $hover-color;
+        }
+      }
+    }
+  }
+}

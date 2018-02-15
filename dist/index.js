@@ -1,44 +1,53 @@
 'use strict';
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+function _interopDefault(ex) {
+  return ex && typeof ex === 'object' && 'default' in ex ? ex.default : ex;
+}
 
-var postcss = require('postcss');
-var postcss__default = _interopDefault(postcss);
-var path = _interopDefault(require('path'));
-var resolve = _interopDefault(require('@csstools/sass-import-resolve'));
-var precss = _interopDefault(require('precss'));
+let postcss = require('postcss');
+let postcss__default = _interopDefault(postcss);
+let path = _interopDefault(require('path'));
+let resolve = _interopDefault(require('@csstools/sass-import-resolve'));
+let precss = _interopDefault(require('precss'));
 
-var injectNormalize = postcss__default.plugin('postcss-inject-normalize', function (opts) {
-  return function (root) {
-    if (!opts.includeNormalize) {
-      return;
-    }
-    var first = root.nodes[0];
-    if (first && first.type === 'atrule' && first.name === 'charset') {
-      root.insertAfter(first, {
-        type: 'atrule',
-        name: 'import',
-        params: '"normalize.css/normalize.css"'
-      });
-    } else {
-      root.prepend({
-        type: 'atrule',
-        name: 'import',
-        params: '"normalize.css/normalize.css"'
-      });
-    }
-  };
-});
+let injectNormalize = postcss__default.plugin(
+  'postcss-inject-normalize',
+  opts => {
+    return function (root) {
+      if (!opts.includeNormalize) {
+        return;
+      }
+      let first = root.nodes[0];
+      if (first && first.type === 'atrule' && first.name === 'charset') {
+        root.insertAfter(first, {
+          type: 'atrule',
+          name: 'import',
+          params: '"normalize.css/normalize.css"',
+        });
+      } else {
+        root.prepend({
+          type: 'atrule',
+          name: 'import',
+          params: '"normalize.css/normalize.css"',
+        });
+      }
+    };
+  }
+);
 
-var slicedToArray = function () {
+let slicedToArray = (function () {
   function sliceIterator(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
+    let _arr = [];
+    let _n = true;
+    let _d = false;
+    let _e = undefined;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (
+        var _i = arr[Symbol.iterator](), _s;
+        !(_n = (_s = _i.next()).done);
+        _n = true
+      ) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -48,7 +57,7 @@ var slicedToArray = function () {
       _e = err;
     } finally {
       try {
-        if (!_n && _i["return"]) _i["return"]();
+        if (!_n && _i.return) _i.return();
       } finally {
         if (_d) throw _e;
       }
@@ -63,32 +72,35 @@ var slicedToArray = function () {
     } else if (Symbol.iterator in Object(arr)) {
       return sliceIterator(arr, i);
     } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      throw new TypeError(
+        'Invalid attempt to destructure non-iterable instance'
+      );
     }
   };
-}();
+}());
 
 // return the @import statement options/details
 function parseImportParams(node, opts) {
-  var params = postcss.list.space(node.params);
-  var rawid = params[0];
-  var alias = void 0;
+  let params = postcss.list.space(node.params);
+  let rawid = params[0];
+  let alias = void 0;
   if (isPackageImport(params)) {
     alias = params[2];
   }
 
-  var _trimWrappingURL$spli = trimWrappingURL(rawid).split(':'),
-      _trimWrappingURL$spli2 = slicedToArray(_trimWrappingURL$spli, 2),
-      id = _trimWrappingURL$spli2[0],
-      namedExport = _trimWrappingURL$spli2[1];
+  let _trimWrappingURL$spli = trimWrappingURL(rawid).split(':'),
+    _trimWrappingURL$spli2 = slicedToArray(_trimWrappingURL$spli, 2),
+    id = _trimWrappingURL$spli2[0],
+    namedExport = _trimWrappingURL$spli2[1];
 
   // current working file and directory
 
+  let cwf =
+    node.source && node.source.input && node.source.input.file ||
+    opts.result.from;
+  let cwd = cwf ? path.dirname(cwf) : opts.importRoot;
 
-  var cwf = node.source && node.source.input && node.source.input.file || opts.result.from;
-  var cwd = cwf ? path.dirname(cwf) : opts.importRoot;
-
-  return { id: id, alias: alias, cwf: cwf, cwd: cwd, namedExport: namedExport };
+  return { id, alias, cwf, cwd, namedExport };
 }
 
 // return a string with the wrapping url() and quotes trimmed
@@ -106,7 +118,7 @@ function isPackageImport(params) {
 }
 
 function parseExportParams(params) {
-  var parts = postcss.list.space(params);
+  let parts = postcss.list.space(params);
   if (parts[0] === 'as') {
     return trimWrappingQuotes(parts[1]);
   }
@@ -114,10 +126,13 @@ function parseExportParams(params) {
 }
 
 function replaceImportedPackage(importRule, packageNodes, importParams) {
-  var matchingExportContents = null;
+  let matchingExportContents = null;
 
-  packageNodes.forEach(function (packageNode) {
-    if (!matchingExportContents && isMatchingExport(importParams, packageNode)) {
+  packageNodes.forEach(packageNode => {
+    if (
+      !matchingExportContents &&
+      isMatchingExport(importParams, packageNode)
+    ) {
       matchingExportContents = packageNode.nodes;
     }
   });
@@ -126,19 +141,21 @@ function replaceImportedPackage(importRule, packageNodes, importParams) {
     throw new Error('No matching export found');
   }
 
-  var newRule = postcss__default.rule({
+  let newRule = postcss__default.rule({
     selector: '',
-    raws: { semicolon: true }
+    raws: { semicolon: true },
   });
   importRule.parent.insertAfter(importRule, newRule);
-  importRule.walk(function (userRule) {
+  importRule.walk(userRule => {
     newRule.append(userRule);
   });
-  newRule.append(postcss__default.decl({
-    prop: '$name',
-    value: importParams.alias,
-    source: importRule.source
-  }));
+  newRule.append(
+    postcss__default.decl({
+      prop: '$name',
+      value: importParams.alias,
+      source: importRule.source,
+    })
+  );
   newRule.append(matchingExportContents);
 
   importRule.remove();
@@ -151,19 +168,19 @@ function isMatchingExport(importParams, importedNode) {
   if (!importParams.namedExport && importedNode.params.trim() === '') {
     return true;
   }
-  var exportAlias = parseExportParams(importedNode.params);
+  let exportAlias = parseExportParams(importedNode.params);
   return exportAlias === importParams.namedExport;
 }
 
 function manageUnresolved(node, opts, word, message) {
   if (opts.unresolved === 'warn') {
-    node.warn(opts.result, message, { word: word });
+    node.warn(opts.result, message, { word });
   } else if (opts.unresolved !== 'ignore') {
-    throw node.error(message, { word: word });
+    throw node.error(message, { word });
   }
 }
 
-var processor = postcss__default();
+let processor = postcss__default();
 
 function transformRule(rule, opts) {
   if (rule.type !== 'atrule') {
@@ -178,87 +195,102 @@ function transformRule(rule, opts) {
 // transform @import at-rules
 function transformImportAtRule(rule, opts) {
   // @import options
-  var importParams = parseImportParams(rule, opts);
+  let importParams = parseImportParams(rule, opts);
 
-  var cwds = [importParams.cwd].concat(opts.importPaths);
+  let cwds = [importParams.cwd].concat(opts.importPaths);
 
   // promise the resolved file and its contents using the file resolver
-  var importPromise = cwds.reduce(function (promise, thiscwd) {
-    return promise.catch(function () {
+  let importPromise = cwds.reduce((promise, thiscwd) => {
+    return promise.catch(() => {
       return opts.importResolve(importParams.id, thiscwd, opts);
     });
   }, Promise.reject());
 
   return importPromise.then(
-  // promise the processed file
-  function (_ref) {
-    var file = _ref.file,
+    // promise the processed file
+    _ref => {
+      let file = _ref.file,
         contents = _ref.contents;
 
-    return processor.process(contents, { from: file }).then(function (_ref2) {
-      var root = _ref2.root;
+      return processor.process(contents, { from: file }).then(_ref2 => {
+        let root = _ref2.root;
 
-      // push a dependency message
-      opts.result.messages.push({
-        type: 'dependency',
-        file: file,
-        parent: importParams.cwf
-      });
+        // push a dependency message
+        opts.result.messages.push({
+          type: 'dependency',
+          file,
+          parent: importParams.cwf,
+        });
 
-      // imported nodes
-      var nodes = root.nodes.slice(0);
+        // imported nodes
+        let nodes = root.nodes.slice(0);
 
-      // replace the @import at-rule with the imported nodes
-      if (importParams.alias) {
-        // package import
-        try {
-          replaceImportedPackage(rule, nodes, importParams);
-        } catch (e) {
-          return manageUnresolved(rule, opts, '@import', 'No matching @export found for "' + importParams.id + '"');
+        // replace the @import at-rule with the imported nodes
+        if (importParams.alias) {
+          // package import
+          try {
+            replaceImportedPackage(rule, nodes, importParams);
+          } catch (e) {
+            return manageUnresolved(
+              rule,
+              opts,
+              '@import',
+              'No matching @export found for "' + importParams.id + '"'
+            );
+          }
+        } else {
+          // normal partial import
+          rule.replaceWith(nodes);
         }
-      } else {
-        // normal partial import
-        rule.replaceWith(nodes);
-      }
 
-      // transform all nodes from the import
-      // transformNode({ nodes }, opts);
-      var childPromises = [];
-      nodes.forEach(function (child) {
-        if (child.type === 'atrule' && child.name.toLowerCase() === 'import') {
-          childPromises.push(transformRule(child, opts));
-        }
+        // transform all nodes from the import
+        // transformNode({ nodes }, opts);
+        let childPromises = [];
+        nodes.forEach(child => {
+          if (
+            child.type === 'atrule' &&
+            child.name.toLowerCase() === 'import'
+          ) {
+            childPromises.push(transformRule(child, opts));
+          }
+        });
+
+        return Promise.all(childPromises);
       });
-
-      return Promise.all(childPromises);
-    });
-  }, function () {
-    // otherwise, if the @import could not be found
-    manageUnresolved(rule, opts, '@import', 'Could not resolve the @import for "' + importParams.id + '"');
-  });
+    },
+    () => {
+      // otherwise, if the @import could not be found
+      manageUnresolved(
+        rule,
+        opts,
+        '@import',
+        'Could not resolve the @import for "' + importParams.id + '"'
+      );
+    }
+  );
 }
 
-var DEFAULT_OPTIONS = {
+let DEFAULT_OPTIONS = {
   importPaths: ['node_modules'],
   importPromise: [],
-  importCache: {}
+  importCache: {},
 };
 
 function resolveImport(opts) {
   return function (id, cwd) {
-    return resolve(id, { cwd: cwd, readFile: true, cache: opts.importCache });
+    return resolve(id, { cwd, readFile: true, cache: opts.importCache });
   };
 }
 
-var kolachePlugin = postcss__default.plugin('postcss-kolache', function (opts) {
+let kolachePlugin = postcss__default.plugin('postcss-kolache', opts => {
   return function (root, result) {
     opts = Object.assign(DEFAULT_OPTIONS, opts);
     opts.importResolve = Object(opts).resolve || resolveImport(opts);
     opts.result = result;
 
-    var promises = [];
+    let promises = [];
 
-    root.walkAtRules('import', function (rule) {
+    root.walkAtRules('import', rule => {
       promises.push(transformRule(rule, opts));
     });
 
@@ -266,19 +298,19 @@ var kolachePlugin = postcss__default.plugin('postcss-kolache', function (opts) {
   };
 });
 
-var DEFAULT_OPTIONS$1 = {
+let DEFAULT_OPTIONS$1 = {
   includeNormalize: true,
-  importPaths: ['node_modules']
+  importPaths: ['node_modules'],
 };
 
-var index = postcss__default.plugin('kolache', function (opts) {
+let index = postcss__default.plugin('kolache', opts => {
   opts = Object.assign({}, DEFAULT_OPTIONS$1, opts);
 
-  var plugins = [injectNormalize(opts), kolachePlugin(opts), precss(opts)];
+  let plugins = [injectNormalize(opts), kolachePlugin(opts), precss(opts)];
 
   return function (root, result) {
-    return plugins.reduce(function (promise, plugin) {
-      return promise.then(function () {
+    return plugins.reduce((promise, plugin) => {
+      return promise.then(() => {
         return plugin(result.root, result);
       });
     }, Promise.resolve());

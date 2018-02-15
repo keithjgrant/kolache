@@ -1,0 +1,25 @@
+@export {
+  $link-selector: $(name) > li > a !default;
+  $color: $color-primary !default;
+  $hover-color: black !default;
+  $hover-text-decoration: underline !default;
+
+  $(name) {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  $(link-selector) {
+    display: block;
+    padding: $offset-padding;
+    color: $color;
+    text-decoration: none;
+    font-weight: $font-weight-bold;
+
+    &:hover {
+      color: $hover-color;
+      text-decoration: $hover-text-decoration;
+    }
+  }
+}
