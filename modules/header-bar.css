@@ -5,16 +5,16 @@
 
   $(name) {
     display: flex;
-    align-items: baseline;
     border-bottom: $border;
+    align-items: baseline;
 
     &__brand {
       margin-right: 1em;
 
       a {
         padding: $offset-padding;
-        font-weight: $font-weight-bold;
         color: $body-color;
+        font-weight: $font-weight-bold;
         text-transform: $text-transform;
         text-decoration: none;
 
