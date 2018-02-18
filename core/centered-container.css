@@ -1,0 +1,16 @@
+@export {
+  $width: 62em;
+  $min-margin: 1em;
+  $breakpoint: 64em;
+
+  $(name) {
+    padding-right: $min-margin;
+    padding-left: $min-margin;
+
+    @media (min-width: $breakpoint) {
+      margin-right: auto;
+      margin-left: auto;
+      max-width: $width;
+    }
+  }
+}

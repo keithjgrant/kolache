@@ -1,0 +1,22 @@
+@export as 'stacked' {
+  $link-selector: $(name) > li > a !default;
+
+  $(name) {
+    margin: 0;
+    padding-left: 0;
+    list-style-type: none;
+  }
+
+  $(link-selector) {
+    display: block;
+    padding: $offset-padding;
+    text-decoration: none;
+    color: $gray-5;
+
+    &:hover {
+      text-decoration: underline;
+      color: $color-primary;
+      background-color: $gray-9;
+    }
+  }
+}

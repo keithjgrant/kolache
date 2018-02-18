@@ -5,9 +5,17 @@
   }
 }
 
-@export as 'variant' {
+@export as "variant" {
   $(name) {
     color: $color;
     border-color: $color;
+  }
+}
+
+@export as "variables" {
+  $color: green !default;
+
+  $(name) {
+    color: $color;
   }
 }

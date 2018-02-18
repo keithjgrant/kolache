@@ -97,6 +97,27 @@ it('should import package nested in a partial', () => {
   );
 });
 
+it('should import a named export with variables', () => {
+  return run(
+    `
+@import "static-button:variables" as .button-danger {
+  $color: red;
+}
+  `,
+    `
+{
+  $color: red;
+  $name: .button-danger;
+  $color: green !default;
+
+  $(name) {
+    color: $color;
+  }
+}
+`
+  );
+});
+
 // these are working correctly under normal usage. Unsure how to test
 it.skip('should log a warning if import fails', () => {
   const input = '@import "invalid";';

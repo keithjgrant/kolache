@@ -1,0 +1,43 @@
+$white: #fff;
+$black: #000;
+
+$hue-primary: 207;
+$hue-danger: 0;
+$hue-success: 180;
+$hue-warning: 30;
+
+$color-primary: hsl($hue-primary, 56%, 47%);
+$color-danger: hsl($hue-danger, 46%, 50%);
+$color-success: hsl($hue-success, 56%, 40%);
+$color-warning: hsl($hue-warning, 66%, 57%);
+
+$color-primary-dark: hsl($hue-primary, 56%, 30%);
+$color-primary-light: hsl($hue-primary, 56%, 65%);
+
+$gray-1: hsl($hue-primary, 15%, 10%);
+$gray-2: hsl($hue-primary, 15%, 20%);
+$gray-3: hsl($hue-primary, 15%, 30%);
+$gray-4: hsl($hue-primary, 15%, 40%);
+$gray-5: hsl($hue-primary, 15%, 50%);
+$gray-6: hsl($hue-primary, 15%, 60%);
+$gray-7: hsl($hue-primary, 15%, 70%);
+$gray-8: hsl($hue-primary, 15%, 80%);
+$gray-9: hsl($hue-primary, 15%, 90%);
+$gray-10: hsl($hue-primary, 15%, 96%);
+
+$body-color: hsl(207, 10%, 10%);
+
+$padding: 0.8em;
+$offset-padding: 0.3em 0.8em;
+
+$border-radius: 0.2em;
+
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  "Segoe UI Symbol" !default;
+$font-family-heading: $font-family !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 500 !default;
+$font-weight-bold: 700 !default;
+
+@import "base";

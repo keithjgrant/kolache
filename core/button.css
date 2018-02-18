@@ -1,0 +1,25 @@
+@export {
+  $color: $white !default;
+  $bg-color: $color-primary !default;
+  $font-weight: $font-weight-normal !default;
+
+  $(name) {
+    color: $color;
+    background-color: $bg-color;
+    padding: $offset-padding;
+    border: 0;
+    border-radius: $border-radius;
+    font-weight: $font-weight;
+  }
+}
+
+@export as "color" {
+  $(name) {
+    background-color: $color;
+  }
+}
+
+@export as "size" {
+  $(name) {
+  }
+}
