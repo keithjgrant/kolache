@@ -2,13 +2,13 @@
 
 [![Build Status][ci-img]][ci]
 
-Import and distribute CSS packages.
+Import and distribute configurable CSS packages via npm.
 
 [postcss]: https://github.com/postcss/postcss
 [ci-img]: https://travis-ci.org/keithjgrant/kolache.svg
 [ci]: https://travis-ci.org/keithjgrant/kolache
 
-Package and publish configurable CSS modules via npm.
+Full documentation at [kolache.keithjgrant.com](https://kolache.keithjgrant.com).
 
 ```scss
 /* main.css */
