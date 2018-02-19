@@ -4,6 +4,7 @@
   $hover-color: black !default;
   $hover-text-decoration: underline !default;
   $breakpoint: 400px !default;
+  $wrap: false !default;
 
   $(name) {
     margin: 0;
@@ -27,6 +28,9 @@
   @media (min-width: $breakpoint) {
     $(name) {
       display: flex;
+      @if $wrap {
+        flex-wrap: wrap;
+      }
     }
 
     $(link-selector) {
