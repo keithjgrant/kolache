@@ -4,13 +4,19 @@
   $font-weight: $font-weight-normal !default;
 
   $(name) {
+    display: inline-block;
     color: $color;
     background-color: $bg-color;
     padding: $offset-padding;
     border: 0;
     border-radius: $border-radius;
     font-weight: $font-weight;
+    text-decoration: none;
     cursor: pointer;
+
+    &:visited {
+      color: $color;
+    }
 
     &:hover {
       background-image: linear-gradient(

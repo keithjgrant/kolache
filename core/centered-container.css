@@ -6,6 +6,7 @@
   $(name) {
     padding-right: $min-margin;
     padding-left: $min-margin;
+    margin-bottom: 3em;
 
     @media (min-width: $breakpoint) {
       margin-right: auto;
