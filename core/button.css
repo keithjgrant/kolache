@@ -10,16 +10,34 @@
     border: 0;
     border-radius: $border-radius;
     font-weight: $font-weight;
+    cursor: pointer;
+
+    &:hover {
+      background-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+      );
+      box-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.2);
+    }
   }
 }
 
 @export as "color" {
+  $color: $white !default;
+
   $(name) {
-    background-color: $color;
+    color: $color;
+    background-color: $bg-color;
   }
 }
 
 @export as "size" {
+  $size: 15rem !default;
+  $padding: $offset-padding !default;
+
   $(name) {
+    font-size: $size;
+    padding: $padding;
   }
 }

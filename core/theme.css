@@ -25,9 +25,15 @@ $gray-8: hsl($hue-primary, 15%, 80%);
 $gray-9: hsl($hue-primary, 15%, 90%);
 $gray-10: hsl($hue-primary, 15%, 96%);
 
+$link-color: hsl($hue-primary, 75%, 40%) !default;
+$link-color-visited: hsl($hue-primary, 60%, 40%) !default;
+$link-color-hover: hsl($hue-primary, 75%, 30%) !default;
+$link-color-active: hsl($hue-danger, 46%, 50%);
+
 $body-color: hsl(207, 10%, 10%);
 
 $padding: 0.8em;
+$padding-sm: 0.2em;
 $offset-padding: 0.3em 0.8em;
 
 $border-radius: 0.2em;
@@ -39,5 +45,4 @@ $font-family-heading: $font-family !default;
 $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
 $font-weight-bold: 700 !default;
-
-@import "base";
+$font-weight-black: 900 !default;

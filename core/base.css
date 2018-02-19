@@ -1,3 +1,13 @@
+:root {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 body {
   font-family: $font-family;
 }
@@ -7,4 +17,29 @@ h2,
 h3,
 h4 {
   font-family: $font-family-heading;
+}
+
+a {
+  color: $link-color;
+
+  &:visited {
+    color: $link-color-visited;
+  }
+
+  &:hover {
+    color: $link-color-hover;
+  }
+
+  &:active {
+    color: $link-color-active;
+  }
+}
+
+pre {
+  display: block;
+  padding: $padding;
+  border: 1px solid $gray-5;
+  background-color: $gray-10;
+  border-radius: $border-radius;
+  overflow-x: auto;
 }

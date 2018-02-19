@@ -3,16 +3,17 @@
   $color: $color-primary !default;
   $hover-color: black !default;
   $hover-text-decoration: underline !default;
+  $breakpoint: 400px !default;
 
   $(name) {
-    display: flex;
+    margin: 0;
     padding-left: 0;
     list-style: none;
   }
 
   $(link-selector) {
     display: block;
-    padding: $offset-padding;
+    padding: $padding-sm $padding;
     color: $color;
     text-decoration: none;
     font-weight: $font-weight-bold;
@@ -20,6 +21,16 @@
     &:hover {
       color: $hover-color;
       text-decoration: $hover-text-decoration;
+    }
+  }
+
+  @media (min-width: $breakpoint) {
+    $(name) {
+      display: flex;
+    }
+
+    $(link-selector) {
+      padding: $offset-padding;
     }
   }
 }

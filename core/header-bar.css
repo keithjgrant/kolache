@@ -2,16 +2,16 @@
   $border: 1px solid #808080 !default;
   $text-transform: uppercase !default;
   $hover-color: $color-primary !default;
+  $breakpoint: 600px !default;
 
   $(name) {
-    display: flex;
     border-bottom: $border;
-    align-items: baseline;
 
     &__brand {
       margin-right: 1em;
 
       a {
+        display: block;
         padding: $offset-padding;
         color: $body-color;
         font-weight: $font-weight-bold;
@@ -22,6 +22,11 @@
           color: $hover-color;
         }
       }
+    }
+
+    @media (min-width: $breakpoint) {
+      display: flex;
+      align-items: baseline;
     }
   }
 }
