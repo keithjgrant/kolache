@@ -13,7 +13,8 @@
 }
 
 @export as "variables" {
-  $color: green !default;
+  $color: green;
+  $bg-color: lightgreen;
 
   $(name) {
     color: $color;

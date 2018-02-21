@@ -1,0 +1,45 @@
+@export {
+  $color: color-mod($color-primary shade(30%)) !default;
+  $bg-color: color-mod($color lightness(90%)) !default;
+  $link-color: color-mod($color lightness(-15%)) !default;
+
+  $(name) {
+    padding: $offset-padding-large;
+    border-radius: $border-radius;
+    border: 1px solid $color;
+    color: $color;
+    background-color: $bg-color;
+
+    a {
+      color: $link-color;
+    }
+  }
+}
+
+@export as "color" {
+  $bg-color: color-mod($color lightness(90%)) !default;
+  $border-color: $color !default;
+  $link-color: color-mod($color lightness(-15%)) !default;
+
+  $(name) {
+    color: $color;
+    border-color: $border-color;
+    background-color: $bg-color;
+
+    a {
+      color: $link-color;
+    }
+  }
+}
+
+/*
+Renders to:
+$color: $color-danger; // user, passed in
+
+$name: .alert--danger; // export
+
+// package-defined
+$bg-color: color-mod($color lightness(90%)) !default;
+$border-color: $color !default;
+$link-color: color-mod($color lightness(-15%)) !default;
+*/

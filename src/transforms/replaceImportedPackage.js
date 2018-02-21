@@ -6,39 +6,50 @@ export default function replaceImportedPackage(
   packageNodes,
   importParams
 ) {
-  let matchingExportContents = null;
-
-  packageNodes.forEach(packageNode => {
-    if (
-      !matchingExportContents &&
-      isMatchingExport(importParams, packageNode)
-    ) {
-      matchingExportContents = packageNode.nodes;
+  const exportedNodes = getExportedNodes(packageNodes, importParams);
+  const parameters = {};
+  const exportedRules = [];
+  exportedNodes.forEach(node => {
+    if (node.type === 'decl') {
+      parameters[node.prop] = node;
+    } else {
+      exportedRules.push(node);
     }
   });
-
-  if (!matchingExportContents) {
-    throw new Error('No matching export found');
-  }
+  importRule.walk(decl => {
+    if (decl.type === 'decl') {
+      parameters[decl.prop] = decl;
+    }
+  });
+  parameters.$name = postcss.decl({
+    prop: '$name',
+    value: importParams.alias,
+    source: importRule.source,
+  });
 
   const newRule = postcss.rule({
     selector: '',
     raws: { semicolon: true },
   });
   importRule.parent.insertAfter(importRule, newRule);
-  importRule.walk(userRule => {
-    newRule.append(userRule);
+  for (const prop in parameters) {
+    newRule.append(parameters[prop]);
+  }
+  exportedRules.forEach(rule => {
+    newRule.append(rule);
   });
-  newRule.append(
-    postcss.decl({
-      prop: '$name',
-      value: importParams.alias,
-      source: importRule.source,
-    })
-  );
-  newRule.append(matchingExportContents);
 
   importRule.remove();
+}
+
+function getExportedNodes(packageNodes, importParams) {
+  for (let i = 0; i < packageNodes.length; i++) {
+    if (isMatchingExport(importParams, packageNodes[i])) {
+      return packageNodes[i].nodes;
+    }
+  }
+
+  throw new Error('No matching export found');
 }
 
 function isMatchingExport(importParams, importedNode) {

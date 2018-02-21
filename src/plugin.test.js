@@ -107,14 +107,21 @@ it('should import a named export with variables', () => {
     `
 {
   $color: red;
+  $bg-color: lightgreen;
   $name: .button-danger;
-  $color: green !default;
 
   $(name) {
     color: $color;
   }
 }
 `
+    /*
+previously:
+$color: red;
+$name: .button-danger;
+$color: green;
+$bg-color: lightgreen;
+*/
   );
 });
 
@@ -132,7 +139,7 @@ it.skip('should log a warning if import fails', () => {
         expect(result.css.trim()).toEqual('');
         expect(result.warnings().length).toBe(1);
       },
-      err => {
+      () => {
         expect(true).toBeTrue();
       }
     );
