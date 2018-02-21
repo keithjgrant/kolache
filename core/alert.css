@@ -17,9 +17,9 @@
 }
 
 @export as "color" {
-  $bg-color: color-mod($color lightness(90%)) !default;
-  $border-color: $color !default;
-  $link-color: color-mod($color lightness(-15%)) !default;
+  $bg-color: color-mod($color lightness(90%));
+  $border-color: $color;
+  $link-color: color-mod($color lightness(-15%));
 
   $(name) {
     color: $color;

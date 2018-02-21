@@ -32,8 +32,11 @@ $link-color-active: hsl($hue-danger, 46%, 50%);
 
 $body-color: hsl(207, 10%, 10%);
 
-$padding: 0.8em;
-$padding-sm: 0.2em;
+$padding-large: 1em;
+$padding-medium: 0.8em;
+$padding-small: 0.64em;
+$padding-xsmall: 0.2em;
+$padding: $padding-medium;
 $offset-padding: 0.3em 0.8em;
 $offset-padding-large: 0.8em 1.25em;
 

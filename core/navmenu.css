@@ -1,10 +1,11 @@
 @export {
-  $link-selector: $(name) > li > a !default;
-  $color: $color-primary !default;
-  $hover-color: black !default;
-  $hover-text-decoration: underline !default;
-  $breakpoint: 400px !default;
-  $wrap: false !default;
+  $link-selector: $(name) > li > a;
+  $color: $color-primary;
+  $hover-color: black;
+  $hover-text-decoration: underline;
+  $breakpoint: 400px;
+  $wrap: false;
+  $padding: $offset-padding;
 
   $(name) {
     margin: 0;
@@ -14,7 +15,7 @@
 
   $(link-selector) {
     display: block;
-    padding: $padding-sm $padding;
+    padding: $padding;
     color: $color;
     text-decoration: none;
     font-weight: $font-weight-bold;

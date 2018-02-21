@@ -114,34 +114,50 @@ function parseExportParams(params) {
 }
 
 function replaceImportedPackage(importRule, packageNodes, importParams) {
-  var matchingExportContents = null;
-
-  packageNodes.forEach(function (packageNode) {
-    if (!matchingExportContents && isMatchingExport(importParams, packageNode)) {
-      matchingExportContents = packageNode.nodes;
+  var exportedNodes = getExportedNodes(packageNodes, importParams);
+  var parameters = {};
+  var exportedRules = [];
+  parameters.$name = postcss__default.decl({
+    prop: '$name',
+    value: importParams.alias,
+    source: importRule.source
+  });
+  exportedNodes.forEach(function (node) {
+    if (node.type === 'decl') {
+      parameters[node.prop] = node;
+    } else {
+      exportedRules.push(node);
     }
   });
-
-  if (!matchingExportContents) {
-    throw new Error('No matching export found');
-  }
+  importRule.walk(function (decl) {
+    if (decl.type === 'decl') {
+      parameters[decl.prop] = decl;
+    }
+  });
 
   var newRule = postcss__default.rule({
     selector: '',
     raws: { semicolon: true }
   });
   importRule.parent.insertAfter(importRule, newRule);
-  importRule.walk(function (userRule) {
-    newRule.append(userRule);
+  for (var prop in parameters) {
+    newRule.append(parameters[prop]);
+  }
+  exportedRules.forEach(function (rule) {
+    newRule.append(rule);
   });
-  newRule.append(postcss__default.decl({
-    prop: '$name',
-    value: importParams.alias,
-    source: importRule.source
-  }));
-  newRule.append(matchingExportContents);
 
   importRule.remove();
+}
+
+function getExportedNodes(packageNodes, importParams) {
+  for (var i = 0; i < packageNodes.length; i++) {
+    if (isMatchingExport(importParams, packageNodes[i])) {
+      return packageNodes[i].nodes;
+    }
+  }
+
+  throw new Error('No matching export found');
 }
 
 function isMatchingExport(importParams, importedNode) {

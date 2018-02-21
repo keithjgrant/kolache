@@ -10,6 +10,7 @@
 
 body {
   font-family: $font-family;
+  line-height: 1.5;
 }
 
 h1,

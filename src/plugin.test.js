@@ -44,9 +44,9 @@ it('should insert package with custom vars', () => {
   `,
     `
 {
+  $name: .button;
   $border-radius: 1em;
   $color: inherit;
-  $name: .button;
   $(name) {
     display: inline-block;
     padding: 0.3em;
@@ -65,8 +65,8 @@ it('should import a named export', () => {
   `,
     `
 {
-  $color: red;
   $name: .button-danger;
+  $color: red;
   $(name) {
     color: $color;
     border-color: $color;
@@ -106,26 +106,23 @@ it('should import a named export with variables', () => {
   `,
     `
 {
+  $name: .button-danger;
   $color: red;
   $bg-color: lightgreen;
-  $name: .button-danger;
 
   $(name) {
     color: $color;
   }
 }
 `
-    /*
-previously:
-$color: red;
-$name: .button-danger;
-$color: green;
-$bg-color: lightgreen;
-*/
   );
 });
 
-// these are working correctly under normal usage. Unsure how to test
+/*
+  These next two are working correctly under normal usage: PostCSS
+  throws an error and indicates the exact spot causing the error.
+  Unsure how to test here though :/
+*/
 it.skip('should log a warning if import fails', () => {
   const input = '@import "invalid";';
   postcss([

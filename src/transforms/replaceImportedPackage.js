@@ -9,6 +9,11 @@ export default function replaceImportedPackage(
   const exportedNodes = getExportedNodes(packageNodes, importParams);
   const parameters = {};
   const exportedRules = [];
+  parameters.$name = postcss.decl({
+    prop: '$name',
+    value: importParams.alias,
+    source: importRule.source,
+  });
   exportedNodes.forEach(node => {
     if (node.type === 'decl') {
       parameters[node.prop] = node;
@@ -20,11 +25,6 @@ export default function replaceImportedPackage(
     if (decl.type === 'decl') {
       parameters[decl.prop] = decl;
     }
-  });
-  parameters.$name = postcss.decl({
-    prop: '$name',
-    value: importParams.alias,
-    source: importRule.source,
   });
 
   const newRule = postcss.rule({
