@@ -4,6 +4,7 @@
   $link-color: color-mod($color lightness(-15%));
 
   $(name) {
+    margin: $default-margin 0;
     padding: $offset-padding-large;
     border-radius: $border-radius;
     border: 1px solid $color;

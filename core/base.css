@@ -18,6 +18,27 @@ h2,
 h3,
 h4 {
   font-family: $font-family-heading;
+  font-weight: $font-weight-bold;
+}
+
+h1 {
+  font-size: 3.375rem;
+  font-weight: $font-weight-black;
+}
+h2 {
+  font-size: 2.25rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1rem;
 }
 
 a {
@@ -39,7 +60,7 @@ a {
 pre {
   display: block;
   padding: $padding;
-  border: 1px solid $gray-5;
+  border: 1px solid $gray-9;
   background-color: $gray-10;
   border-radius: $border-radius;
   overflow-x: auto;

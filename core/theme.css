@@ -32,6 +32,8 @@ $link-color-active: hsl($hue-danger, 46%, 50%);
 
 $body-color: hsl(207, 10%, 10%);
 
+$default-margin: 1rem;
+
 $padding-large: 1em;
 $padding-medium: 0.8em;
 $padding-small: 0.64em;
@@ -45,7 +47,10 @@ $border-radius: 0.2em;
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
   "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol" !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+  "Liberation Mono", "Courier New", monospace !default;
 $font-family-heading: $font-family !default;
+
 $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
 $font-weight-bold: 700 !default;
