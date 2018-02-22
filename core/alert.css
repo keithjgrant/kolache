@@ -1,7 +1,7 @@
 @export {
-  $color: color-mod($color-primary shade(30%)) !default;
-  $bg-color: color-mod($color lightness(90%)) !default;
-  $link-color: color-mod($color lightness(-15%)) !default;
+  $color: color-mod($color-primary shade(30%));
+  $bg-color: color-mod($color lightness(90%));
+  $link-color: color-mod($color lightness(-15%));
 
   $(name) {
     padding: $offset-padding-large;
@@ -17,6 +17,7 @@
 }
 
 @export as "color" {
+  $color: $color-primary;
   $bg-color: color-mod($color lightness(90%));
   $border-color: $color;
   $link-color: color-mod($color lightness(-15%));

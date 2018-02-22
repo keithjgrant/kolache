@@ -26,6 +26,13 @@
       background-color: color-mod($bg-color lightness(-15%));
       box-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.2);
     }
+
+    &:disabled {
+      color: color-mod($color saturation(-20%));
+      background-color: color-mod($bg-color saturation(-20%) lightness(+15%));
+      box-shadow: none;
+      cursor: default;
+    }
   }
 }
 
@@ -35,6 +42,13 @@
   $(name) {
     color: $color;
     background-color: $bg-color;
+
+    &:disabled {
+      color: color-mod($color saturation(-20%));
+      background-color: color-mod($bg-color saturation(-20%) lightness(+15%));
+      box-shadow: none;
+      cursor: default;
+    }
   }
 }
 
@@ -45,5 +59,30 @@
   $(name) {
     font-size: $size;
     padding: $padding;
+  }
+}
+
+@export as "outline" {
+  $color: $color-primary;
+  $bg-color: transparent;
+  $border-color: color-mod($color saturation(-5%));
+
+  $(name) {
+    border: $border-color solid 1px;
+    color: $color;
+    background-color: $bg-color;
+
+    &:hover {
+      background-color: $color;
+      color: $white;
+    }
+
+    &:active {
+      color: $color;
+    }
+
+    &:disabled {
+      background-color: $gray-8;
+    }
   }
 }
