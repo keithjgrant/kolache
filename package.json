@@ -27,7 +27,7 @@
     "@csstools/sass-import-resolve": "^1.0.0",
     "normalize.css": "^8.0.0",
     "postcss": "^6.0.16",
-    "precss": "^3.1.0"
+    "precss": "^3.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -38,6 +38,8 @@
     "eslint-config-postcss": "^2.0.2",
     "jest": "^21.0.0",
     "rollup": "^0.55.5",
-    "rollup-plugin-babel": "^3.0.3"
+    "rollup-plugin-babel": "^3.0.3",
+    "stylelint": "^9.1.1",
+    "stylelint-config-standard": "^18.1.0"
   }
 }

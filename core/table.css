@@ -1,0 +1,30 @@
+@export {
+  $padding: $padding-medium;
+
+  $(name) {
+    width: 100%;
+    max-width: 100%;
+
+    th,
+    td {
+      padding: $padding;
+      text-align: left;
+    }
+  }
+}
+
+@export as "bordered" {
+  $border-color: $gray-7;
+
+  $(name) {
+    border-collapse: collapse;
+    td,
+    th {
+      border: 1px solid $border-color;
+    }
+
+    th {
+      border-bottom-width: 2px;
+    }
+  }
+}

@@ -284,10 +284,10 @@ var kolachePlugin = postcss__default.plugin('postcss-kolache', function (opts) {
 
 var DEFAULT_OPTIONS$1 = {
   includeNormalize: true,
-  importPaths: ['node_modules']
+  importPaths: ["node_modules"]
 };
 
-var index = postcss__default.plugin('kolache', function (opts) {
+var index = postcss__default.plugin("kolache", function (opts) {
   opts = Object.assign({}, DEFAULT_OPTIONS$1, opts);
 
   var plugins = [injectNormalize(opts), kolachePlugin(opts), precss(opts)];

@@ -23,8 +23,13 @@
 
     &:hover {
       color: $color;
-      background-color: color-mod($bg-color lightness(-15%));
+      background-color: color-mod($bg-color lightness(-10%));
       box-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.2);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px color-mod($bg-color alpha(50%));
+      outline: none;
     }
 
     &:disabled {
@@ -42,6 +47,14 @@
   $(name) {
     color: $color;
     background-color: $bg-color;
+
+    &:hover {
+      background-color: color-mod($bg-color lightness(-15%));
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px color-mod($bg-color alpha(50%));
+    }
 
     &:disabled {
       color: color-mod($color saturation(-20%));
@@ -81,8 +94,39 @@
       color: $color;
     }
 
+    &:focus {
+      box-shadow: 0 0 0 3px color-mod($color alpha(50%));
+    }
+
     &:disabled {
       background-color: $gray-8;
+    }
+  }
+}
+
+@export as "link" {
+  $(name) {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: $link-color;
+    font-weight: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:visited {
+      color: $link-color-visited;
+    }
+
+    &:hover {
+      color: $link-color-hover;
+      background: none;
+      box-shadow: none;
+    }
+
+    &:active {
+      color: $link-color-active;
     }
   }
 }

@@ -2,9 +2,10 @@
   $color: color-mod($color-primary shade(30%));
   $bg-color: color-mod($color lightness(90%));
   $link-color: color-mod($color lightness(-15%));
+  $margin: 0 0 $default-margin;
 
   $(name) {
-    margin: $default-margin 0;
+    margin: $margin;
     padding: $offset-padding-large;
     border-radius: $border-radius;
     border: 1px solid $color;
@@ -13,6 +14,10 @@
 
     a {
       color: $link-color;
+
+      &:hover {
+        color: color-mod($link-color saturation(+30%));
+      }
     }
   }
 }
@@ -30,6 +35,10 @@
 
     a {
       color: $link-color;
+
+      &:hover {
+        color: color-mod($link-color saturation(+30%));
+      }
     }
   }
 }
