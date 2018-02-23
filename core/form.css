@@ -1,11 +1,14 @@
 @export as "group" {
+  $label-margin: 0.5rem;
+
   $(name) {
-    $margin-bottom: 0.5rem;
+    margin-bottom: $default-margin;
 
     & > label {
       display: block;
       font-weight: $font-weight-normal;
-      margin-bottom: $margin-bottom;
+      margin-bottom: $label-margin;
+      user-select: none;
     }
   }
 }
@@ -22,6 +25,7 @@
     border: 1px solid $border-color;
     border-radius: $border-radius;
     color: inherit;
+    line-height: inherit;
 
     > option {
       font-size: inherit;
@@ -30,6 +34,68 @@
     &:focus {
       box-shadow: 0 0 0 3px color-mod($focus-color alpha(30%));
       outline: none;
+    }
+  }
+
+  select$(name):not([size]):not([multiple]) {
+    height: calc(2px + 1.5em + $offset-padding-v + $offset-padding-v);
+  }
+}
+
+@export as "toggle" {
+  $legend-font-weight: $font-weight-bold;
+
+  $(name) {
+    display: block;
+    margin-bottom: $default-margin;
+    padding: 0;
+    border: none;
+
+    > label {
+      display: block;
+      user-select: none;
+    }
+
+    > legend {
+      font-weight: $legend-font-weight;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      vertical-align: 0.1em;
+    }
+  }
+
+  label$(name) {
+    user-select: none;
+  }
+}
+
+@export as "feedback" {
+  $color: $brand-primary;
+  $feedback-selector: .form-feedback;
+  $feedback-border-width: 0;
+
+  $(name) {
+    > label,
+    > legend {
+      color: $color;
+    }
+
+    > input,
+    > textarea,
+    > select {
+      border-color: $color;
+      box-shadow: 0 0 0 3px color-mod($color alpha(30%));
+    }
+
+    $(feedback-selector) {
+      padding: $offset-padding;
+      border: $feedback-border-width solid color-mod($color lightness(+30%));
+      border-bottom-right-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+      color: $color;
+      background-color: color-mod($color alpha(10%));
     }
   }
 }

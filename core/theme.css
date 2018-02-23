@@ -3,7 +3,7 @@ $black: #000;
 
 $hue-primary: 207;
 $hue-danger: 0;
-$hue-success: 180;
+$hue-success: 165;
 $hue-warning: 30;
 
 $color-primary: hsl($hue-primary, 56%, 47%);
@@ -39,7 +39,10 @@ $padding-medium: 0.8em;
 $padding-small: 0.64em;
 $padding-xsmall: 0.2em;
 $padding: $padding-medium;
-$offset-padding: 0.3em 0.8em;
+
+$offset-padding-v: 0.3em;
+$offset-padding-h: 0.8em;
+$offset-padding: $offset-padding-v $offset-padding-h;
 $offset-padding-large: 0.8em 1.25em;
 
 $border-radius: 0.2em;
@@ -55,3 +58,5 @@ $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
 $font-weight-bold: 700 !default;
 $font-weight-black: 900 !default;
+
+$line-height: 1.5;
