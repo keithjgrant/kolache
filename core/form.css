@@ -1,0 +1,35 @@
+@export as "group" {
+  $(name) {
+    margin-bottom: 0.5rem;
+
+    & > label {
+      display: block;
+      font-weight: $font-weight-normal;
+      margin-bottom: $margin-bottom;
+    }
+  }
+}
+
+@export as "field" {
+  $border-color: $gray-8;
+  $padding: $offset-padding;
+  $focus-color: $color-primary;
+
+  $(name) {
+    display: block;
+    width: 100%;
+    padding: $padding;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    color: inherit;
+
+    > option {
+      font-size: inherit;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px color-mod($focus-color alpha(30%));
+      outline: none;
+    }
+  }
+}
