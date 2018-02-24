@@ -1,0 +1,53 @@
+@export {
+  $toggle-selector: $(name)__toggle;
+  $drawer-selector: $(name)__drawer;
+  $arrow-size: 0.25em;
+  $transition-time: 0.2s;
+  $transition-effect: ease-out;
+
+  $(name) {
+    position: relative;
+  }
+
+  $(toggle-selector)::after {
+    content: "";
+    display: inline-block;
+    margin-left: 0.5em;
+    border: $arrow-size solid transparent;
+    border-top-color: currentColor;
+  }
+
+  $(drawer-selector) {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    visibility: hidden;
+    min-width: 10em;
+    width: max-content;
+    background-color: $white;
+    opacity: 0;
+    transition: opacity $transition-time $transition-effect,
+      visibility 0s linear $transition-time;
+  }
+
+  $(name)--right $(drawer-selector) {
+    left: initial;
+    right: 0;
+    text-align: right;
+  }
+
+  $(name).is-open {
+    $(toggle-selector)::after {
+      border-top-color: transparent;
+      border-bottom-color: currentColor;
+      vertical-align: 0.25em;
+    }
+
+    $(drawer-selector) {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity $transition-time $transition-effect,
+        visibility 0s linear;
+    }
+  }
+}

@@ -7,7 +7,8 @@
     "at-rule-no-unknown": [
       true,
       { ignoreAtRules: ["export"] }
-    ]
+    ],
+    "declaration-colon-newline-after": null
   },
   "opinionated_rules_OLD": {
     "indentation": 2,
