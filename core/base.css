@@ -13,6 +13,21 @@ body {
   line-height: $line-height;
 }
 
+/* HTML5 reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
 h1,
 h2,
 h3,
@@ -40,21 +55,21 @@ h1,
 h2,
 .h2 {
   font-size: 2.25rem;
-  line-height: 1.1;
 }
 h3,
 .h3 {
-  font-size: 1.75rem;
-  line-height: 1.25;
+  font-size: 1.5rem;
+  line-height: 1.1666667;
 }
 h4,
 .h4 {
-  font-size: 1.5rem;
-  line-height: 1.25;
+  font-size: 1.25rem;
+  line-height: 1.6;
 }
 h5,
 .h5 {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
+  line-height: 1.5555556;
 }
 h6,
 .h6 {
@@ -101,6 +116,11 @@ samp {
 
 table {
   border-collapse: collapse;
+}
+
+img {
+  max-width: 100%;
+  border: 0;
 }
 
 ::selection {

@@ -7,8 +7,8 @@
   $(name) {
     margin: $margin;
     padding: $offset-padding-large;
-    border-radius: $border-radius;
     border: 1px solid $color;
+    border-radius: $border-radius;
     color: $color;
     background-color: $bg-color;
 
