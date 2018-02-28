@@ -1,57 +1,75 @@
-import { parseImportParams, parseExportParams } from './parseParams';
+import { parseImportParams, parseExportParams } from "./parseParams";
 
-it('should return standard params', () => {
+it("should return standard params", () => {
   const node = {
     params: '"partial"',
     source: {
       input: {
-        file: '/foo/bar/style.css',
-      },
-    },
+        file: "/foo/bar/style.css"
+      }
+    }
   };
   expect(parseImportParams(node, {})).toEqual({
-    id: 'partial',
-    cwd: '/foo/bar',
-    cwf: '/foo/bar/style.css',
-    alias: undefined,
+    id: "partial",
+    cwd: "/foo/bar",
+    cwf: "/foo/bar/style.css",
+    alias: undefined
   });
 });
 
-it('should return params with package alias', () => {
+it("should return params with package alias", () => {
   const node = {
     params: '"button" as .button',
     source: {
       input: {
-        file: '/foo/bar/style.css',
-      },
-    },
+        file: "/foo/bar/style.css"
+      }
+    }
   };
   expect(parseImportParams(node, {})).toEqual({
-    id: 'button',
-    cwd: '/foo/bar',
-    cwf: '/foo/bar/style.css',
-    alias: '.button',
+    id: "button",
+    cwd: "/foo/bar",
+    cwf: "/foo/bar/style.css",
+    alias: ".button"
   });
 });
 
-it('should return params with package alias', () => {
+it("should return params with package alias", () => {
   const node = {
     params: '"button:variant" as .button',
     source: {
       input: {
-        file: '/foo/bar/style.css',
-      },
-    },
+        file: "/foo/bar/style.css"
+      }
+    }
   };
   expect(parseImportParams(node, {})).toEqual({
-    id: 'button',
-    cwd: '/foo/bar',
-    cwf: '/foo/bar/style.css',
-    alias: '.button',
-    namedExport: 'variant',
+    id: "button",
+    cwd: "/foo/bar",
+    cwf: "/foo/bar/style.css",
+    alias: ".button",
+    namedExport: "variant"
   });
 });
 
-it('should get export name', () => {
-  expect(parseExportParams(' as "variant"')).toEqual('variant');
+it("should get export name", () => {
+  expect(parseExportParams(' as "variant"')).toEqual("variant");
+});
+
+it("should import with quoted selector", () => {
+  const node = {
+    params: '"button" as ".complex > .selector"',
+    source: {
+      input: {
+        file: "/foo/bar/style.css"
+      }
+    }
+  };
+  expect(parseImportParams(node, {})).toEqual({
+    id: "button",
+    cwd: "/foo/bar",
+    cwf: "/foo/bar/style.css",
+    alias: ".complex > .selector",
+    namedExport: undefined
+  });
 });

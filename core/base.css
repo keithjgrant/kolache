@@ -118,9 +118,48 @@ table {
   border-collapse: collapse;
 }
 
+th {
+  text-align: inherit;
+}
+
+caption {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: $gray-4;
+  text-align: left;
+  caption-side: bottom;
+}
+
 img {
   max-width: 100%;
   border: 0;
+}
+
+ol,
+ul {
+  margin: 0 0 $default-margin;
+  padding-left: 1.5rem;
+
+  ol,
+  ul {
+    margin-bottom: 0;
+  }
+}
+
+ol ol li {
+  list-style: lower-alpha;
+}
+
+ol ol ol li {
+  list-style: lower-roman;
+}
+
+blockquote {
+  margin: 0 0 $default-margin;
+}
+
+summary {
+  cursor: pointer;
 }
 
 ::selection {

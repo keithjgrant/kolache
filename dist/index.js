@@ -74,10 +74,10 @@ function parseImportParams(node, opts) {
   var rawid = params[0];
   var alias = void 0;
   if (isPackageImport(params)) {
-    alias = params[2];
+    alias = trimWrappingQuotes(params[2]);
   }
 
-  var _trimWrappingURL$spli = trimWrappingURL(rawid).split(':'),
+  var _trimWrappingURL$spli = trimWrappingURL(rawid).split(":"),
       _trimWrappingURL$spli2 = slicedToArray(_trimWrappingURL$spli, 2),
       id = _trimWrappingURL$spli2[0],
       namedExport = _trimWrappingURL$spli2[1];
@@ -93,21 +93,21 @@ function parseImportParams(node, opts) {
 
 // return a string with the wrapping url() and quotes trimmed
 function trimWrappingURL(string) {
-  return trimWrappingQuotes(string.replace(/^url\(([\W\w]*)\)$/, '$1'));
+  return trimWrappingQuotes(string.replace(/^url\(([\W\w]*)\)$/, "$1"));
 }
 
 // return a string with the wrapping quotes trimmed
 function trimWrappingQuotes(string) {
-  return string.replace(/^("|')([\W\w]*)\1$/, '$2');
+  return string.replace(/^("|')([\W\w]*)\1$/, "$2");
 }
 
 function isPackageImport(params) {
-  return params.length === 3 && params[1].trim() === 'as';
+  return params.length === 3 && params[1].trim() === "as";
 }
 
 function parseExportParams(params) {
   var parts = postcss.list.space(params);
-  if (parts[0] === 'as') {
+  if (parts[0] === "as") {
     return trimWrappingQuotes(parts[1]);
   }
   return false;
